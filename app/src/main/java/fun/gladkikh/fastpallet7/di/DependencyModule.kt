@@ -1,15 +1,19 @@
 package `fun`.gladkikh.fastpallet7.di
 
 import `fun`.gladkikh.fastpallet7.db.AppDatabase
+import `fun`.gladkikh.fastpallet7.db.dao.BoxCreatePalletScreenDao
 import `fun`.gladkikh.fastpallet7.db.dao.CreatePalletUpdateDao
 import `fun`.gladkikh.fastpallet7.db.intity.createpallet.getListTriggerCreatePallet
 import `fun`.gladkikh.fastpallet7.model.usecase.testdata.AddTestDataUseCase
 import `fun`.gladkikh.fastpallet7.repository.CreatePalletRepositoryUpdate
+import `fun`.gladkikh.fastpallet7.repository.createpallet.BoxCreatePalletScreenRepository
+import `fun`.gladkikh.fastpallet7.ui.createpallet.BoxCreatPalletViewModel
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 object DependencyModule {
@@ -20,12 +24,16 @@ object DependencyModule {
         //****************************************************************************************
         //DAO
         single { getCreatePalletUpdateDao(get()) }
+        single { getBoxCreatePalletScreenDao(get()) }
         //****************************************************************************************
         //REPOSITORY
         single { CreatePalletRepositoryUpdate(get()) }
+        single { BoxCreatePalletScreenRepository(get(),get()) }
         //****************************************************************************************
         //USE CASE
         single { AddTestDataUseCase(get()) }
+
+        viewModel { BoxCreatPalletViewModel(get()) }
 
     }
 
@@ -52,5 +60,9 @@ object DependencyModule {
 
     private fun getCreatePalletUpdateDao(database: AppDatabase): CreatePalletUpdateDao {
         return database.getCreatePalletUpdateDao()
+    }
+
+    private fun getBoxCreatePalletScreenDao(database: AppDatabase): BoxCreatePalletScreenDao {
+        return database.getBoxCreatePalletScreen()
     }
 }
