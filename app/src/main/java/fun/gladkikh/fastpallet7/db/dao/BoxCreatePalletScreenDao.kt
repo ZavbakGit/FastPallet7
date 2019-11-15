@@ -9,8 +9,10 @@ import androidx.room.Query
 @Dao
 interface BoxCreatePalletScreenDao{
 
-    @Query("SELECT * FROM PalletCreatePalletDb WHERE guid = :guidPallet")
-    fun getPallet(guidPallet:String):LiveData<PalletCreatePalletDb>
+
+    @Query("SELECT * FROM PalletCreatePalletDb  " +
+            "WHERE guid in (Select guidPallet from BoxCreatePalletDb where guid =:guidBox)")
+    fun getPallet(guidBox:String):LiveData<PalletCreatePalletDb>
 
     @Query("SELECT * FROM BoxCreatePalletDb WHERE guid = :guidBox")
     fun getBox(guidBox:String):LiveData<BoxCreatePalletDb>

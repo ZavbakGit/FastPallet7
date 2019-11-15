@@ -6,68 +6,69 @@ import `fun`.gladkikh.fastpallet7.repository.createpallet.BoxCreatePalletScreenR
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import io.reactivex.Flowable
+import io.reactivex.BackpressureStrategy
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import java.util.*
 
 class BoxCreatPalletViewModel(private val repository: BoxCreatePalletScreenRepository) :
     ViewModel() {
 
-    private var guidBox: String? = null
-    private var guidPallet: String? = null
-
-    private val liveDataPallet: MutableLiveData<PalletCreatePallet> = MutableLiveData()
-
-    private val liveDataBox: MutableLiveData<BoxCreatePallet> = MutableLiveData()
-
-    private val observerPallet = Observer<PalletCreatePallet> {
-        liveDataPallet.postValue(it)
+    private val publishSubject = PublishSubject.create<BoxCreatePallet>()
+    private val guidBoxLiveData = MutableLiveData<String>()
+    private val palletResult = Transformations.map(guidBoxLiveData) {
+        repository.getPallet(it)
     }
 
-    private val observerBox = Observer<BoxCreatePallet> {
-        liveDataBox.postValue(it)
+    private val boxResult = Transformations.map(guidBoxLiveData) {
+        repository.getBox(it)
     }
 
-    private var repPalletCreatePallet: LiveData<PalletCreatePallet>? = null
-    private var repBoxCreatePallet: LiveData<BoxCreatePallet>? = null
+    val boxLiveData: LiveData<BoxCreatePallet> = Transformations.switchMap(boxResult) { it }
+    val palletLiveData: LiveData<PalletCreatePallet> =
+        Transformations.switchMap(palletResult) { it }
+
+   private val disposables = CompositeDisposable()
+    override fun onCleared() {
+        super.onCleared()
+        disposables.dispose()
+    }
+
+    init {
+        disposables.add(
+            publishSubject.toFlowable(BackpressureStrategy.BUFFER)
+                .observeOn(Schedulers.io())
+                .doOnNext {
+                    repository.saveBox(it)
+                }
+                .subscribe {
+                    setGuid(it.guid)
+                }
+
+        )
+
+    }
 
 
-    fun getliveDataPallet(): LiveData<PalletCreatePallet> = liveDataPallet
-    fun getliveDataBox(): LiveData<BoxCreatePallet> = liveDataBox
-
-    fun setGuid(guidBox: String, guidPallet: String) {
-        this.guidBox = guidBox
-        this.guidPallet = guidPallet
-
-        repPalletCreatePallet = repository.getPallet(guidPallet)
-        repPalletCreatePallet?.observeForever(observerPallet)
-
-        repBoxCreatePallet = repository.getBox(guidBox)
-        repBoxCreatePallet?.observeForever(observerBox)
+    fun setGuid(guidBox: String) {
+        guidBoxLiveData.postValue(guidBox)
     }
 
     @SuppressLint("CheckResult")
     fun addBox() {
         val box = BoxCreatePallet(
             guid = UUID.randomUUID().toString(),
-            guidPallet = guidPallet!!,
+            guidPallet = palletLiveData.value!!.guid,
             count = 100f,
             countBox = 2,
             barcode = "64654",
             dateChanged = Date()
         )
 
-
-        Flowable.just(box)
-            .doOnNext {
-                repository.saveBox(box)
-            }
-            .subscribeOn(Schedulers.io())
-            .subscribe {
-                setGuid(box.guid, box.guidPallet)
-            }
+        publishSubject.onNext(box)
     }
 
 }

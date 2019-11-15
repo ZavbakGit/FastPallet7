@@ -6,6 +6,7 @@ import `fun`.gladkikh.fastpallet7.repository.CreatePalletRepositoryUpdate
 import `fun`.gladkikh.fastpallet7.ui.createpallet.BoxCreatPalletViewModel
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,9 +24,26 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        addTestData()
+        //addTestData()
 
-        //viewModel.setGuid()
+        viewModel.setGuid("0_0_0_0_")
+
+        viewModel.boxLiveData.observe(this, Observer {
+            it?.let {
+                tvInfo.text = "Box: ${it.guid} \nКол. ${it.count} Мест. ${it.countBox}"
+            }
+
+        })
+
+        viewModel.palletLiveData.observe(this, Observer {
+            it?.let {
+                tvPallet.text = "Pallet: ${it.guid}\n Кол. ${it.count} Мест. ${it.countBox} Стр. ${it.countRow}"
+            }
+        })
+
+        tvInfo.setOnClickListener {
+            viewModel.addBox()
+        }
 
 
     }

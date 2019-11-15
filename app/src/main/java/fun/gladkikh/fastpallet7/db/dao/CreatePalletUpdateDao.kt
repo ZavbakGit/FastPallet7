@@ -33,7 +33,11 @@ interface CreatePalletUpdateDao {
     fun delete(entity: BoxCreatePalletDb)
 
     @Query("SELECT * FROM BoxCreatePalletDb WHERE guid = :guid")
-    fun getBoxCreatPalletByGuid(guid:String): BoxCreatePalletDb
+    fun getBoxByGuid(guid:String): BoxCreatePalletDb
+
+    @Query("SELECT * FROM BoxCreatePalletDb WHERE guidPallet = :guidPallet")
+    fun getListBoxByGuidPallet(guidPallet:String):List<BoxCreatePalletDb>
+
     //endregion
 
     //region function for Pallet
@@ -64,10 +68,10 @@ interface CreatePalletUpdateDao {
     fun delete(entity: PalletCreatePalletDb)
 
     @Query("SELECT * FROM PalletCreatePalletDb WHERE guid = :guid")
-    fun getPalletCreatePalletByGuid(guid:String): PalletCreatePalletDb
+    fun getPalletByGuid(guid:String): PalletCreatePalletDb
 
     @Query("SELECT * FROM PalletCreatePalletDb WHERE guidProduct = :guidProduct")
-    fun getListPalletCreatePalletByGuidProduct(guidProduct:String):List<PalletCreatePalletDb>
+    fun getListPalletByGuidProduct(guidProduct:String):List<PalletCreatePalletDb>
     //endregion
 
     //region function for Product
@@ -98,13 +102,13 @@ interface CreatePalletUpdateDao {
     fun delete(entity: ProductCreatePalletDb)
 
     @Query("SELECT * FROM ProductCreatePalletDb WHERE guid = :guid")
-    fun getProductCreatePalletByGuid(guid:String): ProductCreatePalletDb
+    fun getProductByGuid(guid:String): ProductCreatePalletDb
 
     @Query("SELECT * FROM ProductCreatePalletDb WHERE guidProductBack = :guidProductBack")
-    fun getProductCreatePalletByGuidServer(guidProductBack:String): ProductCreatePalletDb
+    fun getProductByGuidServer(guidProductBack:String): ProductCreatePalletDb
 
     @Query("SELECT * FROM ProductCreatePalletDb WHERE guidDoc = :guidDoc")
-    fun getProductListCreatePalletByGuidDoc(guidDoc:String): List<ProductCreatePalletDb>
+    fun getProductListByGuidDoc(guidDoc:String): List<ProductCreatePalletDb>
 
 
     //endregion
@@ -124,23 +128,14 @@ interface CreatePalletUpdateDao {
         }
     }
 
-    @Transaction
-    fun insertOrUpdateListCreatePallet(list: List<CreatePalletDb>) {
-        list.forEach {
-            if (insertIgnore(it) == -1L) {
-                update(it)
-            }
-        }
-    }
-
     @Delete
     fun delete(entity: CreatePalletDb)
 
     @Query("SELECT * FROM CreatePalletDb WHERE guid = :guid")
-    fun getCreatePalletByGuid(guid:String): CreatePalletDb
+    fun getDocByGuid(guid:String): CreatePalletDb
 
     @Query("SELECT * FROM CreatePalletDb WHERE guidServer = :guidServer")
-    fun getCreatePalletByGuidServer(guidServer:String): CreatePalletDb
+    fun getDocByGuidServer(guidServer:String): CreatePalletDb
     //endregion
 
 }

@@ -14,21 +14,21 @@ class BoxCreatePalletScreenRepository(
     private val createPalletRepositoryUpdate: CreatePalletRepositoryUpdate
 ) {
 
-    fun getPallet(guidPallet: String): LiveData<PalletCreatePallet> {
+    fun getPallet(guidBox: String): LiveData<PalletCreatePallet> {
         return Transformations.map(
-            boxCreatePalletScreenDao.getPallet(guidPallet)
+            boxCreatePalletScreenDao.getPallet(guidBox)
         ) {
-            it.toObject()
+            it?.toObject()
         }
     }
 
     fun getBox(guidBox: String): LiveData<BoxCreatePallet> = Transformations.map(
         boxCreatePalletScreenDao.getBox(guidBox)
     ) {
-        it.toObject()
+        it?.toObject()
     }
 
     fun saveBox(box: BoxCreatePallet) {
-        createPalletRepositoryUpdate.save(box.toDb())
+        createPalletRepositoryUpdate.save(box)
     }
 }
