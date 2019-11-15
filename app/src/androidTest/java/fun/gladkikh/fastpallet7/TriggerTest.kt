@@ -388,11 +388,6 @@ class TriggerTest {
     }
 
 
-    fun testReCalc() {
-        cretTestData()
-
-    }
-
 
     @Test
     fun useAppContextTest() {
