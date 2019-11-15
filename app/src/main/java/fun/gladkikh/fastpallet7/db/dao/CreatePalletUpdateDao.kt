@@ -138,4 +138,57 @@ interface CreatePalletUpdateDao {
     fun getDocByGuidServer(guidServer:String): CreatePalletDb
     //endregion
 
+    @Query("UPDATE PalletCreatePalletDb " +
+            "   SET countRow = ( " +
+            "           SELECT count(DISTINCT guid)  " +
+            "             FROM BoxCreatePalletDb BoxT " +
+            "            WHERE BoxT.guidPallet = PalletCreatePalletDb.guid " +
+            "       ), " +
+            "       count = ( " +
+            "           SELECT sum(IfNull(BoxT.count, 0) )  " +
+            "             FROM BoxCreatePalletDb BoxT " +
+            "            WHERE BoxT.guidPallet = PalletCreatePalletDb.guid " +
+            "       ), " +
+            "       countBox = ( " +
+            "           SELECT sum(IfNull(BoxT.countBox, 0) )  " +
+            "             FROM BoxCreatePalletDb BoxT " +
+            "            WHERE BoxT.guidPallet = PalletCreatePalletDb.guid " +
+            "       );")
+    fun reCalcPallet()
+
+    @Query("UPDATE ProductCreatePalletDb " +
+            "   SET countRow = ( " +
+            "           SELECT count(DISTINCT guid)  " +
+            "             FROM BoxCreatePalletDb BoxT " +
+            "            WHERE BoxT.guidPallet IN ( " +
+            "                      SELECT guid " +
+            "                        FROM PalletCreatePalletDb " +
+            "                       WHERE guidProduct = ProductCreatePalletDb.guid " +
+            "                  ) " +
+            "       ), " +
+            "       count = ( " +
+            "           SELECT sum(IfNull(BoxT.count, 0) )  " +
+            "             FROM BoxCreatePalletDb BoxT " +
+            "            WHERE BoxT.guidPallet IN ( " +
+            "                      SELECT guid " +
+            "                        FROM PalletCreatePalletDb " +
+            "                       WHERE guidProduct = ProductCreatePalletDb.guid " +
+            "                  ) " +
+            "       ), " +
+            "       countBox = ( " +
+            "           SELECT sum(IfNull(BoxT.countBox, 0) )  " +
+            "             FROM BoxCreatePalletDb BoxT " +
+            "            WHERE BoxT.guidPallet IN ( " +
+            "                      SELECT guid " +
+            "                        FROM PalletCreatePalletDb " +
+            "                       WHERE guidProduct = ProductCreatePalletDb.guid " +
+            "                  ) " +
+            "       ), " +
+            "       countPallet = ( " +
+            "           SELECT count(DISTINCT guid)  " +
+            "             FROM PalletCreatePalletDb " +
+            "            WHERE guidProduct = ProductCreatePalletDb.guid " +
+            "       ); ")
+    fun reCalcProduct()
+
 }
