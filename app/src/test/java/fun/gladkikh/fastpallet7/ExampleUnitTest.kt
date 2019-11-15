@@ -12,6 +12,8 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
+       val r = listOf<Float?>(null,null).filterNotNull().fold(0f){total, next -> total + next}
+
         assertEquals(4, 2 + 2)
     }
 }

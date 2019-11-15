@@ -9,8 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,6 +36,44 @@ class ExampleInstrumentedTest {
         number = "1",
         guidServer = "0",
         isLastLoad = false
+    )
+
+    val productTest = ProductCreatePalletDb(
+        guid = "0",
+        guidDoc = docTest.guid,
+        dateChanged = null,
+        barcode = null,
+        count = null,
+        countBox = null,
+        countBack = null,
+        countBoxBack = null,
+        countRow = null,
+        isLastLoad = null,
+        nameProduct = null,
+        number = null,
+        codeProduct = null,
+        ed = null,
+        edCoff = null,
+        weightBarcode = null,
+        weightStartProduct = null,
+        weightEndProduct = null,
+        weightCoffProduct = null,
+        countPallet = null,
+        guidProductBack = null
+    )
+
+    val palletTest = PalletCreatePalletDb(
+        guid = "0",
+        guidProduct = productTest.guid,
+        number = null,
+        nameProduct = null,
+        countRow = null,
+        countBox = null,
+        count = null,
+        barcode = null,
+        dateChanged = null,
+        state = null,
+        sclad = null
     )
 
     fun getListProduct(guidDoc: String): List<ProductCreatePalletDb> {
@@ -128,7 +165,7 @@ class ExampleInstrumentedTest {
     }
 
     @Test
-    fun addCreatePalletTest() {
+    fun insetBoxTest() {
         createPalletUpdateDao!!.insertOrUpdate(docTest)
         getListProduct(docTest.guid).forEach { prod ->
             createPalletUpdateDao!!.insertOrUpdate(prod)
@@ -143,11 +180,105 @@ class ExampleInstrumentedTest {
 
         testDoc(docTest, getListProduct(docTest.guid))
         getListProduct(docTest.guid).forEach { prod ->
-            //testProduct(prod, getListPallet(prod.guid))
+            testProduct(prod, getListPallet(prod.guid))
             getListPallet(prod.guid).forEach { pall ->
                 testPallet(pall, getListBox(pall.guid))
             }
         }
+
+        createPalletUpdateDao!!.delete(docTest)
+
+        assertNull("Нe удалился документ", createPalletUpdateDao!!.getDocByGuid(docTest.guid))
+    }
+
+    @Test
+    fun updateDeleteBox() {
+
+        val listBox = (0..3).map {
+            BoxCreatePalletDb(
+                guid = it.toString(),
+                dateChanged = null,
+                barcode = null,
+                count = 10f,
+                countBox = 2,
+                guidPallet = palletTest.guid
+
+            )
+        }
+
+        createPalletUpdateDao!!.insertOrUpdate(docTest)
+        createPalletUpdateDao!!.insertOrUpdate(productTest)
+        createPalletUpdateDao!!.insertOrUpdate(palletTest)
+
+        listBox.forEach {
+            createPalletUpdateDao!!.insertOrUpdate(it)
+        }
+
+
+        val box0 = listBox[0]
+        box0.count = box0.count?.plus(10f)
+        box0.countBox = box0.countBox?.plus(10)
+        createPalletUpdateDao!!.insertOrUpdate(box0)
+
+
+        //update
+        testPallet(palletTest, listBox)
+        testProduct(productTest, listOf(palletTest))
+
+        //delete
+        createPalletUpdateDao!!.delete(box0)
+        testPallet(palletTest, listBox.filter { it.guid != box0.guid })
+        testProduct(productTest, listOf(palletTest))
+
+
+        createPalletUpdateDao!!.delete(docTest)
+
+        assertNull(
+            "Нe удалился документ",
+            createPalletUpdateDao!!.getDocByGuid(docTest.guid)
+        )
+
+
+    }
+
+    @Test
+    fun insertDeletePallet() {
+        val listBox = (0..3).map {
+            BoxCreatePalletDb(
+                guid = it.toString(),
+                dateChanged = null,
+                barcode = null,
+                count = 10f,
+                countBox = 2,
+                guidPallet = palletTest.guid
+
+            )
+        }
+
+        createPalletUpdateDao!!.insertOrUpdate(docTest)
+        createPalletUpdateDao!!.insertOrUpdate(productTest)
+        createPalletUpdateDao!!.insertOrUpdate(palletTest)
+
+        listBox.forEach {
+            createPalletUpdateDao!!.insertOrUpdate(it)
+        }
+
+
+        val palletTest1 = palletTest.copy(guid = "1")
+        createPalletUpdateDao!!.insertOrUpdate(palletTest1)
+        testProduct(productTest, listOf(palletTest, palletTest1))
+
+        createPalletUpdateDao!!.delete(palletTest1)
+        testProduct(productTest, listOf(palletTest))
+
+        createPalletUpdateDao!!.delete(docTest)
+
+        assertNull(
+            "Нe удалился документ",
+            createPalletUpdateDao!!.getDocByGuid(docTest.guid)
+        )
+
+
     }
 
 
@@ -174,16 +305,18 @@ class ExampleInstrumentedTest {
 
         val listBoxDb = createPalletUpdateDao!!.getListBoxByGuidPallet(pallet.guid)
 
-        val count = listBox
-            .fold(0f) { total, next -> total + next.count!! }
+        val count = listBox.mapNotNull { it.count }
+            .fold(0f) { total, next -> total + next}
 
-        val countBox = listBox
-            .fold(0) { total, next -> total + next.countBox!! }
+        val countBox = listBox.mapNotNull { it.countBox }
+            .fold(0) { total, next -> total + next }
 
 
-        val countDb = listBoxDb.fold(0f) { total, next -> total + next.count!! }
+        val countDb = listBoxDb.mapNotNull { it.count }
+            .fold(0f) { total, next -> total + next }
 
-        val countBoxDb = listBoxDb.fold(0) { total, next -> total + next.countBox!! }
+        val countBoxDb = listBoxDb.mapNotNull { it.countBox }
+            .fold(0) { total, next -> total + next }
 
         if (count != countDb) {
             assertFalse("Паллета Количество в списке не равно!", true)
@@ -220,45 +353,28 @@ class ExampleInstrumentedTest {
         val listPalletDb = createPalletUpdateDao!!.getListPalletByGuidProduct(product.guid)
 
 
-        val count = listPallet
-            .fold(0f) { total, next -> total + next.count!! }
+        val countDb = listPalletDb.mapNotNull { it.count }
+            .fold(0f) { total, next -> total + next }
 
-        val countBox = listPallet
-            .fold(0) { total, next -> total + next.countBox!! }
+        val countBoxDb = listPalletDb.mapNotNull { it.countBox }
+            .fold(0) { total, next -> total + next }
 
-        val countRow = listPallet
-            .fold(0) { total, next -> total + next.countRow!! }
-
-
-        val countDb = listPalletDb
-            .fold(0f) { total, next -> total + next.count!! }
-
-        val countBoxDb = listPalletDb
-            .fold(0) { total, next -> total + next.countBox!! }
-
-        val countRowDb = listPalletDb
-            .fold(0) { total, next -> total + next.countRow!! }
-
-        if (count != countDb) {
-            assertFalse("Продукт Количество в списке не равно!", true)
-        }
-        if (countBox != countBoxDb) {
-            assertFalse("Продукт Места в списке не равно!", true)
-        }
-
-        if (countRow != countRowDb) {
-            assertFalse("Продукт Строк кол. в списке не равно!", true)
-        }
+        val countRowDb = listPalletDb.mapNotNull { it.countRow }
+            .fold(0) { total, next -> total + next}
 
 
         //Тригер
-        if (product.count != countDb) {
+        if (productDb.count != countDb) {
             assertFalse("Продукт Количество не равно c паллетой!", true)
         }
-        if (product.countBox != countBoxDb) {
+        if (productDb.countBox != countBoxDb) {
             assertFalse("Продукт Мест не равно c паллетой!", true)
         }
-        if (product.countRow != countRowDb) {
+        if (productDb.countRow != countRowDb) {
+            assertFalse("Продукт Строк не равно c паллетой!", true)
+        }
+
+        if (productDb.countPallet != listPallet.size) {
             assertFalse("Продукт Строк не равно c паллетой!", true)
         }
 
@@ -268,67 +384,6 @@ class ExampleInstrumentedTest {
         }
     }
 
-
-    fun testDoc1() {
-        val docDb = createPalletUpdateDao!!.getDocByGuid(docTest.guid)
-
-        if (docTest != docDb) {
-            assertFalse("Документы не равны!", true)
-        }
-        val listProdactDb =
-            createPalletUpdateDao!!.getProductListByGuidDoc(docTest.guid)
-
-        if (listProdactDb.size != getListProduct(docTest.guid).size) {
-            assertFalse("Список продуктов не равен!", true)
-        }
-
-        listProdactDb.forEach { prod ->
-
-
-            val listPalletDb =
-                createPalletUpdateDao!!.getListPalletByGuidProduct(prod.guid)
-
-            if (listPalletDb.size != getListPallet(prod.guid).size) {
-                assertFalse("Список пеллет не равен!", true)
-            }
-
-            listPalletDb.forEach { pall ->
-                val listBoxDb = createPalletUpdateDao!!.getListBoxByGuidPallet(pall.guid)
-
-                val listBox = getListBox(pall.guid)
-
-                val count = listBox.fold(0f) { total, next -> total + next.count!! }
-                val countDb = listBoxDb.fold(0f) { total, next -> total + next.count!! }
-
-                val countBox = listBox.fold(0) { total, next -> total + next.countBox!! }
-                val countBoxDb = listBoxDb.fold(0) { total, next -> total + next.countBox!! }
-
-                if (count != countDb) {
-                    assertFalse("Количество не равно!", true)
-                }
-                if (countBox != countBoxDb) {
-                    assertFalse("Места не равно!", true)
-                }
-
-                //Тригер
-                if (pall.count != countDb) {
-                    assertFalse("Количество не равно c паллетой!", true)
-                }
-                if (pall.countBox != countBoxDb) {
-                    assertFalse("Мест не равно c паллетой!", true)
-                }
-                if (pall.countRow != listBoxDb.size) {
-                    assertFalse("Строк не равно c паллетой!", true)
-                }
-
-
-                if (listBoxDb.size != listBox.size) {
-                    assertFalse("Список коробок не равен!", true)
-                }
-
-            }
-        }
-    }
 
     @Test
     fun useAppContext() {
