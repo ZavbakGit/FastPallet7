@@ -1,26 +1,54 @@
 package `fun`.gladkikh.fastpallet7.common
 
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun Date.toSimpleDateTime() : String {
-    val format = SimpleDateFormat("dd.mm.yyyy hh:mm:ss")
-    return format.format(this)
+fun Date?.toSimpleDateTime(): String {
+    return if (this == null) {
+        ""
+    } else {
+        val format = SimpleDateFormat("dd.MM.yyyy hh:mm:ss")
+        format.format(this)
+    }
 }
 
-fun Date.toSimpleDate() : String {
-    val format = SimpleDateFormat("dd.mm.yyyy")
-    return format.format(this)
+
+fun Float?.toSimpleFormat(): String {
+    return if (this == null) {
+        "0.0"
+    } else {
+        val df = DecimalFormat("###,###.###")
+        df.format(this).replace(",", " ")
+    }
 }
 
-fun String.getDecimalStr():String{
-    return "[^\\d,.]".toRegex().replace(this, "").replace(",",".")
+fun Int?.toSimpleFormat(): String {
+    return if (this == null) {
+        "0"
+    } else {
+        String.format("%,d", this)
+    }
 }
 
-fun String.getIntByParseStr():Int{
-    return this.getDecimalStr().toIntOrNull()?:0
+
+fun Date.toSimpleDate(): String {
+    return if (this == null) {
+        "0.0"
+    } else {
+        val format = SimpleDateFormat("dd.MM.yyyy")
+        format.format(this)
+    }
 }
 
-fun String.getFloatByParseStr():Float{
-    return this.getDecimalStr().toFloatOrNull()?:0f
+fun String.getDecimalStr(): String {
+    return "[^\\d,.]".toRegex().replace(this, "").replace(",", ".")
+}
+
+fun String.getIntByParseStr(): Int {
+    return this.getDecimalStr().toIntOrNull() ?: 0
+}
+
+fun String.getFloatByParseStr(): Float {
+    return this.getDecimalStr().toFloatOrNull() ?: 0f
 }

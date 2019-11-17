@@ -1,6 +1,5 @@
 package `fun`.gladkikh.fastpallet7
 
-import `fun`.gladkikh.fastpallet7.BuildConfig
 import android.annotation.SuppressLint
 import android.provider.Settings
 

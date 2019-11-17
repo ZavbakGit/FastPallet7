@@ -250,7 +250,7 @@ class RecalcTest {
     fun reCalcTest() {
         cretTestData()
 
-        createPalletUpdateDao!!.reCalcPallet()
+        createPalletUpdateDao!!.recalcPallet()
         createPalletUpdateDao!!.reCalcProduct()
 
         testDoc(docTest, getListProduct(docTest.guid))

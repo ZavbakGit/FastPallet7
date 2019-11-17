@@ -73,7 +73,7 @@ fun getListTriggerCreatePallet(): List<String> {
                 "END;"
     )
 
-   //Insert Pallet
+    //Insert Pallet
     listTrigger.add(
         "CREATE TRIGGER OnPalInsert " +
                 "         AFTER INSERT " +
@@ -104,7 +104,7 @@ fun getListTriggerCreatePallet(): List<String> {
                 "     WHERE guid = OLD.guidProduct; " +
                 "END;"
     )
-    
-    
+
+
     return listTrigger
 }

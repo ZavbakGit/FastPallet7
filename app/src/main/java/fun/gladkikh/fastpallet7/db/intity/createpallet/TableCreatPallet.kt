@@ -47,9 +47,9 @@ data class ProductCreatePalletDb(
     var countBack: Float?,  //Количество из Back
     var countBoxBack: Int?, //Количество Мест Back
 
-    var count:Float?, //Количество
+    var count: Float?, //Количество
     var countBox: Int?, //Количество мест
-    var countRow:Int?,  //Количество строк
+    var countRow: Int?,  //Количество строк
     var countPallet: Int?, //Количество паллет
 
     var dateChanged: Long?,
@@ -76,9 +76,9 @@ data class PalletCreatePalletDb(
     var state: String?,
     var sclad: String?,
 
-    var count:Float?, //Количество
+    var count: Float?, //Количество
     var countBox: Int?, //Количество мест
-    var countRow:Int?  //Количество строк
+    var countRow: Int?  //Количество строк
 )
 
 @Entity(
@@ -94,7 +94,7 @@ data class BoxCreatePalletDb(
     @ColumnInfo(index = true) var guidPallet: String,
     var barcode: String?,
 
-    var count:Float?, //Количество
+    var count: Float?, //Количество
     var countBox: Int?, //Количество мест
 
     var dateChanged: Long?

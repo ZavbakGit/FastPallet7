@@ -71,4 +71,7 @@ class CreatePalletRepositoryUpdate(val createPalletUpdateDao: CreatePalletUpdate
         }
         //createPalletUpdateDao.insertListBox(list.map { it.toDb() })
     }
+
+    fun recalcPallet() = createPalletUpdateDao.recalcPallet()
+    fun recalcProduct() = createPalletUpdateDao.reCalcProduct()
 }

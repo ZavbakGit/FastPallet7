@@ -1,20 +1,22 @@
 package `fun`.gladkikh.fastpallet7.model.entity.creatpallet
 
 import `fun`.gladkikh.fastpallet7.model.Status
+import `fun`.gladkikh.fastpallet7.model.Type
+import `fun`.gladkikh.fastpallet7.model.entity.document.Document
 import java.util.*
 
 
 data class CreatePallet(
-    val guid: String,
-    val number: String?,
-    val date: Date?,
-    val status: Status?,
-    var guidServer: String?,
-    var dateChanged: Date?,
-    var isLastLoad: Boolean?,
-    var description: String?,
-    var barcode: String?
-)
+    override val guid: String,
+    override val number: String?,
+    override val date: Date?,
+    override val status: Status?,
+    override var guidServer: String?,
+    override var dateChanged: Date?,
+    override var isLastLoad: Boolean?,
+    override var description: String?,
+    override var barcode: String?
+) : Document(Type.CREATE_PALLET)
 
 data class ProductCreatePallet(
     val guid: String,
@@ -36,9 +38,9 @@ data class ProductCreatePallet(
     var countBack: Float?,  //Количество из Back
     var countBoxBack: Int?, //Количество Мест Back
 
-    var count:Float?, //Количество
+    var count: Float?, //Количество
     var countBox: Int?, //Количество мест
-    var countRow:Int?,  //Количество строк
+    var countRow: Int?,  //Количество строк
     var countPallet: Int?, //Количество паллет
 
     var dateChanged: Date?,
@@ -56,9 +58,9 @@ data class PalletCreatePallet(
     var state: String?,
     var sclad: String?,
 
-    var count:Float?, //Количество
+    var count: Float?, //Количество
     var countBox: Int?, //Количество мест
-    var countRow:Int?  //Количество строк
+    var countRow: Int?  //Количество строк
 )
 
 data class BoxCreatePallet(
@@ -66,7 +68,7 @@ data class BoxCreatePallet(
     var guidPallet: String,
     var barcode: String?,
 
-    var count:Float?, //Количество
+    var count: Float?, //Количество
     var countBox: Int?, //Количество мест
 
     var dateChanged: Date?

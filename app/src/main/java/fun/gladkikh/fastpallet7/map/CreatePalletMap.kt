@@ -7,11 +7,13 @@ import `fun`.gladkikh.fastpallet7.db.intity.createpallet.ProductCreatePalletDb
 import `fun`.gladkikh.fastpallet7.model.Status
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.BoxCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.CreatePallet
+
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.PalletCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.ProductCreatePallet
+
 import java.util.*
 
-fun CreatePalletDb.toObject():CreatePallet{
+fun CreatePalletDb.toObject(): CreatePallet {
     return CreatePallet(
         guid = guid,
         barcode = barcode,
@@ -26,7 +28,7 @@ fun CreatePalletDb.toObject():CreatePallet{
 }
 
 
-fun CreatePallet.toDb():CreatePalletDb{
+fun CreatePallet.toDb(): CreatePalletDb {
     return CreatePalletDb(
         guid = guid,
         barcode = barcode,
@@ -124,7 +126,7 @@ fun PalletCreatePallet.toDb(): PalletCreatePalletDb {
     )
 }
 
-fun BoxCreatePalletDb.toObject():BoxCreatePallet{
+fun BoxCreatePalletDb.toObject(): BoxCreatePallet {
     return BoxCreatePallet(
         guid = guid,
         dateChanged = this.dateChanged?.let { Date(it) },
@@ -135,7 +137,7 @@ fun BoxCreatePalletDb.toObject():BoxCreatePallet{
     )
 }
 
-fun BoxCreatePallet.toDb():BoxCreatePalletDb{
+fun BoxCreatePallet.toDb(): BoxCreatePalletDb {
     return BoxCreatePalletDb(
         guid = guid,
         dateChanged = dateChanged?.time,

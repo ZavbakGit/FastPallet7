@@ -4,10 +4,14 @@ import `fun`.gladkikh.fastpallet7.db.AppDatabase
 import `fun`.gladkikh.fastpallet7.db.dao.BoxCreatePalletScreenDao
 import `fun`.gladkikh.fastpallet7.db.dao.CreatePalletUpdateDao
 import `fun`.gladkikh.fastpallet7.db.intity.createpallet.getListTriggerCreatePallet
+import `fun`.gladkikh.fastpallet7.model.usecase.check.CheckDocumentUseCase
+import `fun`.gladkikh.fastpallet7.model.usecase.recalcdb.RecalcDbUseCase
+import `fun`.gladkikh.fastpallet7.model.usecase.savebox.BoxCreatePalletUseCase
 import `fun`.gladkikh.fastpallet7.model.usecase.testdata.AddTestDataUseCase
 import `fun`.gladkikh.fastpallet7.repository.CreatePalletRepositoryUpdate
 import `fun`.gladkikh.fastpallet7.repository.createpallet.BoxCreatePalletScreenRepository
-import `fun`.gladkikh.fastpallet7.ui.createpallet.BoxCreatPalletViewModel
+import `fun`.gladkikh.fastpallet7.ui.createpallet.BoxCreatePalletViewModel
+import `fun`.gladkikh.fastpallet7.ui.test.TestViewModel
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -28,12 +32,18 @@ object DependencyModule {
         //****************************************************************************************
         //REPOSITORY
         single { CreatePalletRepositoryUpdate(get()) }
-        single { BoxCreatePalletScreenRepository(get(),get()) }
+        single { BoxCreatePalletScreenRepository(get(), get()) }
         //****************************************************************************************
         //USE CASE
         single { AddTestDataUseCase(get()) }
+        single { RecalcDbUseCase(get()) }
+        single { BoxCreatePalletUseCase(get(), get()) }
+        single { CheckDocumentUseCase() }
 
-        viewModel { BoxCreatPalletViewModel(get()) }
+
+
+        viewModel { BoxCreatePalletViewModel(get(), get()) }
+        viewModel { TestViewModel(get(), get(), get()) }
 
     }
 

@@ -55,11 +55,10 @@ class AddTestDataUseCase(private val createPalletRepositoryUpdate: CreatePalletR
         println(countBox)
     }
 
-
     private fun getListProduct(guidDoc: String): List<ProductCreatePallet> {
         return (0..3).map {
             ProductCreatePallet(
-                guid = guidDoc +"_" + it,
+                guid = guidDoc + "_" + it,
                 guidDoc = guidDoc,
                 nameProduct = "Продукт $it",
                 dateChanged = Date(),
@@ -74,38 +73,38 @@ class AddTestDataUseCase(private val createPalletRepositoryUpdate: CreatePalletR
                 edCoff = 1f,
                 weightBarcode = "12345515454",
                 countPallet = 5,
-                weightCoffProduct = 0.001f,
+                weightCoffProduct = 0.1f,
                 weightStartProduct = 1,
-                weightEndProduct = 6,
+                weightEndProduct = 4,
                 countRow = null,
-                countBoxBack = null,
-                countBack = null
+                countBoxBack = 50,
+                countBack = 562.568f
             )
         }
     }
 
     private fun getListPallets(guidProduct: String): List<PalletCreatePallet> {
-        return (0..10).map {
+        return (0..2).map {
             PalletCreatePallet(
-                guid = guidProduct +"_" + it,
+                guid = guidProduct + "_" + it,
                 guidProduct = guidProduct,
-                number = guidProduct +"_" + it,
+                number = guidProduct + "_" + it,
                 barcode = "65465546546548",
                 sclad = "Основной",
                 dateChanged = Date(),
                 count = null,
                 countBox = null,
                 state = null,
-                nameProduct = "Продукт " + guidProduct +"_" + it,
+                nameProduct = "Продукт " + guidProduct + "_" + it,
                 countRow = null
             )
         }
     }
 
     private fun getListBox(guidPallet: String): List<BoxCreatePallet> {
-        return (0..10).map {
+        return (0..3).map {
             BoxCreatePallet(
-                guid = guidPallet +"_" + it,
+                guid = guidPallet + "_" + it,
                 guidPallet = guidPallet,
                 barcode = "654656516516516516",
                 countBox = 1,

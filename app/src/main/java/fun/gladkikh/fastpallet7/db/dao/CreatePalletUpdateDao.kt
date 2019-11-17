@@ -1,7 +1,6 @@
 package `fun`.gladkikh.fastpallet7.db.dao
 
 
-
 import `fun`.gladkikh.fastpallet7.db.intity.createpallet.BoxCreatePalletDb
 import `fun`.gladkikh.fastpallet7.db.intity.createpallet.CreatePalletDb
 import `fun`.gladkikh.fastpallet7.db.intity.createpallet.PalletCreatePalletDb
@@ -33,10 +32,10 @@ interface CreatePalletUpdateDao {
     fun delete(entity: BoxCreatePalletDb)
 
     @Query("SELECT * FROM BoxCreatePalletDb WHERE guid = :guid")
-    fun getBoxByGuid(guid:String): BoxCreatePalletDb
+    fun getBoxByGuid(guid: String): BoxCreatePalletDb
 
     @Query("SELECT * FROM BoxCreatePalletDb WHERE guidPallet = :guidPallet")
-    fun getListBoxByGuidPallet(guidPallet:String):List<BoxCreatePalletDb>
+    fun getListBoxByGuidPallet(guidPallet: String): List<BoxCreatePalletDb>
 
     //endregion
 
@@ -68,10 +67,10 @@ interface CreatePalletUpdateDao {
     fun delete(entity: PalletCreatePalletDb)
 
     @Query("SELECT * FROM PalletCreatePalletDb WHERE guid = :guid")
-    fun getPalletByGuid(guid:String): PalletCreatePalletDb
+    fun getPalletByGuid(guid: String): PalletCreatePalletDb
 
     @Query("SELECT * FROM PalletCreatePalletDb WHERE guidProduct = :guidProduct")
-    fun getListPalletByGuidProduct(guidProduct:String):List<PalletCreatePalletDb>
+    fun getListPalletByGuidProduct(guidProduct: String): List<PalletCreatePalletDb>
     //endregion
 
     //region function for Product
@@ -102,13 +101,13 @@ interface CreatePalletUpdateDao {
     fun delete(entity: ProductCreatePalletDb)
 
     @Query("SELECT * FROM ProductCreatePalletDb WHERE guid = :guid")
-    fun getProductByGuid(guid:String): ProductCreatePalletDb
+    fun getProductByGuid(guid: String): ProductCreatePalletDb
 
     @Query("SELECT * FROM ProductCreatePalletDb WHERE guidProductBack = :guidProductBack")
-    fun getProductByGuidServer(guidProductBack:String): ProductCreatePalletDb
+    fun getProductByGuidServer(guidProductBack: String): ProductCreatePalletDb
 
     @Query("SELECT * FROM ProductCreatePalletDb WHERE guidDoc = :guidDoc")
-    fun getProductListByGuidDoc(guidDoc:String): List<ProductCreatePalletDb>
+    fun getProductListByGuidDoc(guidDoc: String): List<ProductCreatePalletDb>
 
 
     //endregion
@@ -132,63 +131,67 @@ interface CreatePalletUpdateDao {
     fun delete(entity: CreatePalletDb)
 
     @Query("SELECT * FROM CreatePalletDb WHERE guid = :guid")
-    fun getDocByGuid(guid:String): CreatePalletDb
+    fun getDocByGuid(guid: String): CreatePalletDb
 
     @Query("SELECT * FROM CreatePalletDb WHERE guidServer = :guidServer")
-    fun getDocByGuidServer(guidServer:String): CreatePalletDb
+    fun getDocByGuidServer(guidServer: String): CreatePalletDb
     //endregion
 
-    @Query("UPDATE PalletCreatePalletDb " +
-            "   SET countRow = ( " +
-            "           SELECT count(DISTINCT guid)  " +
-            "             FROM BoxCreatePalletDb BoxT " +
-            "            WHERE BoxT.guidPallet = PalletCreatePalletDb.guid " +
-            "       ), " +
-            "       count = ( " +
-            "           SELECT sum(IfNull(BoxT.count, 0) )  " +
-            "             FROM BoxCreatePalletDb BoxT " +
-            "            WHERE BoxT.guidPallet = PalletCreatePalletDb.guid " +
-            "       ), " +
-            "       countBox = ( " +
-            "           SELECT sum(IfNull(BoxT.countBox, 0) )  " +
-            "             FROM BoxCreatePalletDb BoxT " +
-            "            WHERE BoxT.guidPallet = PalletCreatePalletDb.guid " +
-            "       );")
-    fun reCalcPallet()
+    @Query(
+        "UPDATE PalletCreatePalletDb " +
+                "   SET countRow = ( " +
+                "           SELECT count(DISTINCT guid)  " +
+                "             FROM BoxCreatePalletDb BoxT " +
+                "            WHERE BoxT.guidPallet = PalletCreatePalletDb.guid " +
+                "       ), " +
+                "       count = ( " +
+                "           SELECT sum(IfNull(BoxT.count, 0) )  " +
+                "             FROM BoxCreatePalletDb BoxT " +
+                "            WHERE BoxT.guidPallet = PalletCreatePalletDb.guid " +
+                "       ), " +
+                "       countBox = ( " +
+                "           SELECT sum(IfNull(BoxT.countBox, 0) )  " +
+                "             FROM BoxCreatePalletDb BoxT " +
+                "            WHERE BoxT.guidPallet = PalletCreatePalletDb.guid " +
+                "       );"
+    )
+    fun recalcPallet()
 
-    @Query("UPDATE ProductCreatePalletDb " +
-            "   SET countRow = ( " +
-            "           SELECT count(DISTINCT guid)  " +
-            "             FROM BoxCreatePalletDb BoxT " +
-            "            WHERE BoxT.guidPallet IN ( " +
-            "                      SELECT guid " +
-            "                        FROM PalletCreatePalletDb " +
-            "                       WHERE guidProduct = ProductCreatePalletDb.guid " +
-            "                  ) " +
-            "       ), " +
-            "       count = ( " +
-            "           SELECT sum(IfNull(BoxT.count, 0) )  " +
-            "             FROM BoxCreatePalletDb BoxT " +
-            "            WHERE BoxT.guidPallet IN ( " +
-            "                      SELECT guid " +
-            "                        FROM PalletCreatePalletDb " +
-            "                       WHERE guidProduct = ProductCreatePalletDb.guid " +
-            "                  ) " +
-            "       ), " +
-            "       countBox = ( " +
-            "           SELECT sum(IfNull(BoxT.countBox, 0) )  " +
-            "             FROM BoxCreatePalletDb BoxT " +
-            "            WHERE BoxT.guidPallet IN ( " +
-            "                      SELECT guid " +
-            "                        FROM PalletCreatePalletDb " +
-            "                       WHERE guidProduct = ProductCreatePalletDb.guid " +
-            "                  ) " +
-            "       ), " +
-            "       countPallet = ( " +
-            "           SELECT count(DISTINCT guid)  " +
-            "             FROM PalletCreatePalletDb " +
-            "            WHERE guidProduct = ProductCreatePalletDb.guid " +
-            "       ); ")
+    @Query(
+        "UPDATE ProductCreatePalletDb " +
+                "   SET countRow = ( " +
+                "           SELECT count(DISTINCT guid)  " +
+                "             FROM BoxCreatePalletDb BoxT " +
+                "            WHERE BoxT.guidPallet IN ( " +
+                "                      SELECT guid " +
+                "                        FROM PalletCreatePalletDb " +
+                "                       WHERE guidProduct = ProductCreatePalletDb.guid " +
+                "                  ) " +
+                "       ), " +
+                "       count = ( " +
+                "           SELECT sum(IfNull(BoxT.count, 0) )  " +
+                "             FROM BoxCreatePalletDb BoxT " +
+                "            WHERE BoxT.guidPallet IN ( " +
+                "                      SELECT guid " +
+                "                        FROM PalletCreatePalletDb " +
+                "                       WHERE guidProduct = ProductCreatePalletDb.guid " +
+                "                  ) " +
+                "       ), " +
+                "       countBox = ( " +
+                "           SELECT sum(IfNull(BoxT.countBox, 0) )  " +
+                "             FROM BoxCreatePalletDb BoxT " +
+                "            WHERE BoxT.guidPallet IN ( " +
+                "                      SELECT guid " +
+                "                        FROM PalletCreatePalletDb " +
+                "                       WHERE guidProduct = ProductCreatePalletDb.guid " +
+                "                  ) " +
+                "       ), " +
+                "       countPallet = ( " +
+                "           SELECT count(DISTINCT guid)  " +
+                "             FROM PalletCreatePalletDb " +
+                "            WHERE guidProduct = ProductCreatePalletDb.guid " +
+                "       ); "
+    )
     fun reCalcProduct()
 
 }
