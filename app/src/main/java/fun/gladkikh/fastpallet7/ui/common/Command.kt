@@ -8,7 +8,6 @@ sealed class Command {
         val requestCode: Int,
         val data: Any? = null
     ) : Command()
-
     data class EditNumberDialog(
         val message: String,
         val requestCode: Int,
