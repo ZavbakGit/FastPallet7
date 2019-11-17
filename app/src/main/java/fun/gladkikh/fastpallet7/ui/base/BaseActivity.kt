@@ -1,6 +1,7 @@
 package `fun`.gladkikh.fastpallet7.ui.base
 
 import `fun`.gladkikh.fastpallet7.R
+import `fun`.gladkikh.fastpallet7.ui.common.SingleLiveEvent
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.animation.Animation
@@ -17,7 +18,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     lateinit var fadeInAnim: Animation
 
-    private val keyDownMutableLiveData = SingleLiveEvent<Int>()
+    private val keyDownMutableLiveData =
+        SingleLiveEvent<Int>()
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (isShowProgress.value != true) {

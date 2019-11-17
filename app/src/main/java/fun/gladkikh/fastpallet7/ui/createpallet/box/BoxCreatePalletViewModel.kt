@@ -11,7 +11,7 @@ import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.ProductCreatePallet
 import `fun`.gladkikh.fastpallet7.model.usecase.creatpallet.BoxCreatePalletUseCase
 import `fun`.gladkikh.fastpallet7.repository.createpallet.BoxCreatePalletScreenRepository
 import `fun`.gladkikh.fastpallet7.ui.base.BaseViewModel
-import `fun`.gladkikh.fastpallet7.ui.base.Command.*
+import `fun`.gladkikh.fastpallet7.ui.common.Command.*
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

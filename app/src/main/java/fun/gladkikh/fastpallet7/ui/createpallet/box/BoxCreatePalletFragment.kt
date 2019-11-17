@@ -8,8 +8,8 @@ import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.PalletCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.ProductCreatePallet
 import `fun`.gladkikh.fastpallet7.ui.activity.MainActivity
 import `fun`.gladkikh.fastpallet7.ui.base.BaseFragment
-import `fun`.gladkikh.fastpallet7.ui.base.Command
-import `fun`.gladkikh.fastpallet7.ui.base.Command.Close
+import `fun`.gladkikh.fastpallet7.ui.common.Command
+import `fun`.gladkikh.fastpallet7.ui.common.Command.Close
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.block_box.*
 import kotlinx.android.synthetic.main.block_pallet.*

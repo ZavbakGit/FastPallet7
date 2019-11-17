@@ -1,8 +1,11 @@
 package `fun`.gladkikh.fastpallet7.ui.base
 
 import `fun`.gladkikh.fastpallet7.ui.activity.MainActivity
-import `fun`.gladkikh.fastpallet7.ui.base.Command.ConfirmDialog
-import `fun`.gladkikh.fastpallet7.ui.base.Command.EditNumberDialog
+import `fun`.gladkikh.fastpallet7.ui.common.Command
+import `fun`.gladkikh.fastpallet7.ui.common.Command.ConfirmDialog
+import `fun`.gladkikh.fastpallet7.ui.common.Command.EditNumberDialog
+import `fun`.gladkikh.fastpallet7.ui.common.startConfirmDialog
+import `fun`.gladkikh.fastpallet7.ui.common.startEditDialogNumber
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
