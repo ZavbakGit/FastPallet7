@@ -1,4 +1,4 @@
-package `fun`.gladkikh.fastpallet7.ui.createpallet
+package `fun`.gladkikh.fastpallet7.ui.createpallet.box
 
 import `fun`.gladkikh.fastpallet7.Constants.KEY_1
 import `fun`.gladkikh.fastpallet7.Constants.KEY_2
@@ -8,7 +8,7 @@ import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.BoxCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.CreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.PalletCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.ProductCreatePallet
-import `fun`.gladkikh.fastpallet7.model.usecase.savebox.BoxCreatePalletUseCase
+import `fun`.gladkikh.fastpallet7.model.usecase.creatpallet.BoxCreatePalletUseCase
 import `fun`.gladkikh.fastpallet7.repository.createpallet.BoxCreatePalletScreenRepository
 import `fun`.gladkikh.fastpallet7.ui.base.BaseViewModel
 import `fun`.gladkikh.fastpallet7.ui.base.Command.*

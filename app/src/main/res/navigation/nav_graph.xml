@@ -13,6 +13,6 @@
     </fragment>
     <fragment
         android:id="@+id/boxCreatPalletFragment"
-        android:name="fun.gladkikh.fastpallet7.ui.createpallet.BoxCreatePalletFragment"
+        android:name="fun.gladkikh.fastpallet7.ui.createpallet.box.BoxCreatePalletFragment"
         android:label="BoxCreatPalletFragment" />
 </navigation>

@@ -1,6 +1,6 @@
 package `fun`.gladkikh.fastpallet7.repository.createpallet
 
-import `fun`.gladkikh.fastpallet7.db.dao.BoxCreatePalletScreenDao
+import `fun`.gladkikh.fastpallet7.db.dao.PalletCreatePalletScreenDao
 import `fun`.gladkikh.fastpallet7.map.toObject
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.BoxCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.CreatePallet
@@ -9,14 +9,13 @@ import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.ProductCreatePallet
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 
-class BoxCreatePalletScreenRepository(
-    private val boxCreatePalletScreenDao: BoxCreatePalletScreenDao
+class PalletCreatePalletScreenRepository(
+    private val palletScreenRepository: PalletCreatePalletScreenDao
 ) {
-
-    fun getDoc(guidBox: String): LiveData<CreatePallet> {
+    fun getDoc(guidPallet: String): LiveData<CreatePallet> {
         return Transformations.map(
             //TODO Переделать
-            boxCreatePalletScreenDao.getDoc("0")
+            palletScreenRepository.getDoc("0")
         ) {
             it?.toObject()
         }
@@ -25,24 +24,28 @@ class BoxCreatePalletScreenRepository(
     fun getProduct(guidBox: String): LiveData<ProductCreatePallet> {
         return Transformations.map(
             //TODO Переделать
-            boxCreatePalletScreenDao.getProduct("0_0")
+            palletScreenRepository.getProduct("0_0")
         ) {
             it?.toObject()
         }
     }
 
-    fun getPallet(guidBox: String): LiveData<PalletCreatePallet> {
+    fun getPallet(guidPallet: String): LiveData<PalletCreatePallet> {
         return Transformations.map(
-            boxCreatePalletScreenDao.getPallet(guidBox)
+            palletScreenRepository.getPallet(guidPallet)
         ) {
             it?.toObject()
         }
     }
 
-    fun getBox(guidBox: String): LiveData<BoxCreatePallet> = Transformations.map(
-        boxCreatePalletScreenDao.getBox(guidBox)
-    ) {
-        it?.toObject()
+    fun getListBox(guidPallet: String): LiveData<List<BoxCreatePallet>> {
+        return Transformations.map(
+            palletScreenRepository.getListBox(guidPallet)
+        ) {
+            it.map {
+                it.toObject()
+            }
+        }
     }
 
 }

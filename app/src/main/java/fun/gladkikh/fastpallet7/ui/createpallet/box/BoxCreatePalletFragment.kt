@@ -1,4 +1,4 @@
-package `fun`.gladkikh.fastpallet7.ui.createpallet
+package `fun`.gladkikh.fastpallet7.ui.createpallet.box
 
 import `fun`.gladkikh.fastpallet7.R
 import `fun`.gladkikh.fastpallet7.common.toSimpleDateTime
@@ -11,7 +11,10 @@ import `fun`.gladkikh.fastpallet7.ui.base.BaseFragment
 import `fun`.gladkikh.fastpallet7.ui.base.Command
 import `fun`.gladkikh.fastpallet7.ui.base.Command.Close
 import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.create_pallet_fragment_box.*
+import kotlinx.android.synthetic.main.block_box.*
+import kotlinx.android.synthetic.main.block_pallet.*
+import kotlinx.android.synthetic.main.block_product.*
+
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BoxCreatePalletFragment : BaseFragment() {
@@ -68,8 +71,8 @@ class BoxCreatePalletFragment : BaseFragment() {
         tvCountPalletProduct.text = product?.countPallet.toSimpleFormat()
         tvCountRowProduct.text = product?.countRow.toSimpleFormat()
 
-        tvCountProductDoc.text = product?.countBack.toSimpleFormat()
-        tvCountPlaceProductDoc.text = product?.countBoxBack.toSimpleFormat()
+        tvCountBackProduct.text = product?.countBack.toSimpleFormat()
+        tvCountPlaceBackProduct.text = product?.countBoxBack.toSimpleFormat()
     }
 
     fun renderPallet(pallet: PalletCreatePallet?) {
@@ -80,13 +83,13 @@ class BoxCreatePalletFragment : BaseFragment() {
     }
 
     fun renderBox(box: BoxCreatePallet?) {
+
         tvDateBox.text = box?.dateChanged.toSimpleDateTime()
         tvCountBox.text = box?.count.toSimpleFormat()
         tvCountPlaceBox.text = box?.countBox.toSimpleFormat()
-        tvCountRowBox.text = "1"
 
         tvCountBox.startAnimation((activity as MainActivity).fadeInAnim)
         tvCountPlaceBox.startAnimation((activity as MainActivity).fadeInAnim)
-        tvCountRowBox.startAnimation((activity as MainActivity).fadeInAnim)
+
     }
 }

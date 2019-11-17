@@ -2,6 +2,7 @@ package `fun`.gladkikh.fastpallet7.db
 
 import `fun`.gladkikh.fastpallet7.db.dao.BoxCreatePalletScreenDao
 import `fun`.gladkikh.fastpallet7.db.dao.CreatePalletUpdateDao
+import `fun`.gladkikh.fastpallet7.db.dao.PalletCreatePalletScreenDao
 import `fun`.gladkikh.fastpallet7.db.intity.createpallet.BoxCreatePalletDb
 import `fun`.gladkikh.fastpallet7.db.intity.createpallet.CreatePalletDb
 import `fun`.gladkikh.fastpallet7.db.intity.createpallet.PalletCreatePalletDb
@@ -20,4 +21,5 @@ import androidx.room.RoomDatabase
 abstract class AppDatabase : RoomDatabase() {
     abstract fun getCreatePalletUpdateDao(): CreatePalletUpdateDao
     abstract fun getBoxCreatePalletScreen(): BoxCreatePalletScreenDao
+    abstract fun getPalletCreatePalletScreenDao(): PalletCreatePalletScreenDao
 }

@@ -1,4 +1,4 @@
-package `fun`.gladkikh.fastpallet7.model.usecase.savebox
+package `fun`.gladkikh.fastpallet7.model.usecase.creatpallet
 
 import `fun`.gladkikh.fastpallet7.common.getWeightByBarcode
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.BoxCreatePallet
