@@ -1,84 +1,120 @@
 package `fun`.gladkikh.fastpallet7.ui.createpallet.box
 
-import `fun`.gladkikh.fastpallet7.Constants.KEY_1
-import `fun`.gladkikh.fastpallet7.Constants.KEY_2
-import `fun`.gladkikh.fastpallet7.Constants.KEY_3
-import `fun`.gladkikh.fastpallet7.Constants.KEY_9
+import `fun`.gladkikh.fastpallet7.Constants
+import `fun`.gladkikh.fastpallet7.common.getWeightByBarcode
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.BoxCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.CreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.PalletCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.ProductCreatePallet
-import `fun`.gladkikh.fastpallet7.model.usecase.creatpallet.BoxCreatePalletUseCase
-import `fun`.gladkikh.fastpallet7.repository.createpallet.BoxCreatePalletScreenRepository
+import `fun`.gladkikh.fastpallet7.model.usecase.check.CheckDocumentUseCase
+import `fun`.gladkikh.fastpallet7.repository.CreatePalletRepositoryUpdate
 import `fun`.gladkikh.fastpallet7.ui.base.BaseViewModel
+import `fun`.gladkikh.fastpallet7.ui.common.Command
 import `fun`.gladkikh.fastpallet7.ui.common.Command.*
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import java.util.*
 
 class BoxCreatePalletViewModel(
-    private val repository: BoxCreatePalletScreenRepository,
-    private val useCaseBox: BoxCreatePalletUseCase
-) :
-    BaseViewModel() {
+    private val repository: CreatePalletRepositoryUpdate,
+    private val checkDocumentUseCase: CheckDocumentUseCase
+) : BaseViewModel() {
 
-    var box: BoxCreatePallet? = null
-        private set
-    var pallet: PalletCreatePallet? = null
-        private set
-    var product: ProductCreatePallet? = null
-        private set
-    var doc: CreatePallet? = null
-        private set
+    private val loadHandler = BoxCreatePalletLoadDataHandler(
+        compositeDisposable,
+        repository
+    )
 
-    private val guidBoxLiveData = MutableLiveData<String>()
+    private val bufferMutableLiveData = MutableLiveData<Int>()
 
-    private val docResult = Transformations.map(guidBoxLiveData) {
-        repository.getDoc(it)
-    }
+    private val addHandler = AddHandler(
+        compositeDisposable = compositeDisposable,
+        repository = repository,
+        //Берем данные из нового бокса
+        beforeAddFun = { box, buffer ->
+            loadHandler.setOnlyBox(box)
+            bufferMutableLiveData.postValue(buffer)
+        },
+        //После сохранения всего списка
+        afterSaveFun = { box, buffer ->
+            bufferMutableLiveData.postValue(buffer)
+            setGuid(box.guid)
+        })
 
-    private val productResult = Transformations.map(guidBoxLiveData) {
-        repository.getProduct(it)
-    }
-
-    private val palletResult = Transformations.map(guidBoxLiveData) {
-        repository.getPallet(it)
-    }
-    private val boxResult = Transformations.map(guidBoxLiveData) {
-        repository.getBox(it)
-    }
-
-    fun getDocLiveData(): LiveData<CreatePallet> = Transformations.switchMap(docResult) { it }
-    fun getProductLiveData(): LiveData<ProductCreatePallet> =
-        Transformations.switchMap(productResult) { it }
-
-    fun getPalletLiveData(): LiveData<PalletCreatePallet> =
-        Transformations.switchMap(palletResult) { it }
-
-    fun getBoxLiveData(): LiveData<BoxCreatePallet> = Transformations.switchMap(boxResult) { it }
+    fun getDocLiveData(): LiveData<CreatePallet> = loadHandler.getDocLiveData()
+    fun getProductLiveData(): LiveData<ProductCreatePallet> = loadHandler.getProductLiveData()
+    fun getPalletLiveData(): LiveData<PalletCreatePallet> = loadHandler.getPalletLiveData()
+    fun getBoxLiveData(): LiveData<BoxCreatePallet> = loadHandler.getBoxLiveData()
+    fun getBufferLiveData(): LiveData<Int> = bufferMutableLiveData
 
     private val CONFIRM_DELETE_DIALOG = 1
     private val EDIT_PLACE_DIALOG = 2
     private val EDIT_COUNT_DIALOG = 3
     private val ADD_COUNT_DIALOG = 4
 
-    init {
-        getBoxLiveData().observeForever {
-            if (it == null) {
-                commandChannel.postValue(Close)
+    fun setGuid(guidBox: String?) {
+        guidBox?.let { loadHandler.setGuid(it) }
+    }
+
+    fun getGuid(): String? {
+        return loadHandler.getCurrentPallet()?.guid
+    }
+
+
+
+    fun keyDown(keyCode: Int) {
+        when (keyCode) {
+            Constants.KEY_1 -> {
+                startEditCount()
             }
-            box = it
+            Constants.KEY_2 -> {
+                startEditPlace()
+            }
+            Constants.KEY_3 -> {
+                startAdd()
+            }
+            Constants.KEY_9 -> {
+                startDelete()
+            }
         }
-        getPalletLiveData().observeForever {
-            pallet = it
-        }
-        getProductLiveData().observeForever {
-            product = it
-        }
-        getDocLiveData().observeForever {
-            doc = it
-        }
+    }
+
+    fun startEditPlace() {
+        commandChannel.postValue(
+            EditNumberDialog(
+                "Мест",
+                EDIT_PLACE_DIALOG,
+                false,
+                (loadHandler.getCurrentBox()?.countBox ?: 0).toString()
+            )
+        )
+    }
+
+    fun startEditCount() {
+        commandChannel.postValue(
+            Command.EditNumberDialog(
+                "Количество",
+                EDIT_COUNT_DIALOG,
+                true,
+                (loadHandler.getCurrentBox()?.count ?: 0).toString()
+            )
+        )
+    }
+
+    fun startAdd() {
+        commandChannel.postValue(
+            Command.EditNumberDialog(
+                "Количество",
+                ADD_COUNT_DIALOG,
+                true,
+                "0"
+            )
+        )
+    }
+
+    fun startDelete() {
+        commandChannel.postValue(ConfirmDialog("Удаляем!", CONFIRM_DELETE_DIALOG))
     }
 
     override fun callBackConfirmDialog(confirmDialog: ConfirmDialog) {
@@ -98,8 +134,9 @@ class BoxCreatePalletViewModel(
                 if (place == null) {
                     messageErrorChannel.postValue("Не верное число!")
                 } else {
+                    val box = loadHandler.getCurrentBox()
                     box!!.countBox = place
-                    saveBox()
+                    saveBox(box)
                 }
             }
             EDIT_COUNT_DIALOG -> {
@@ -107,8 +144,9 @@ class BoxCreatePalletViewModel(
                 if (count == null) {
                     messageErrorChannel.postValue("Не верное число!")
                 } else {
+                    val box = loadHandler.getCurrentBox()
                     box!!.count = count
-                    saveBox()
+                    saveBox(box)
                 }
             }
             ADD_COUNT_DIALOG -> {
@@ -124,103 +162,82 @@ class BoxCreatePalletViewModel(
         }
     }
 
-    fun keyDown(keyCode: Int) {
-        when (keyCode) {
-            KEY_1 -> {
-                startEditCount()
-            }
-            KEY_2 -> {
-                startEditPlace()
-            }
-            KEY_3 -> {
-                startAdd()
-            }
-            KEY_9 -> {
-                startDelete()
-            }
-        }
-    }
-
-    fun setGuid(guidBox: String) {
-        guidBoxLiveData.postValue(guidBox)
-    }
-
-    fun startEditPlace() {
-        commandChannel.postValue(
-            EditNumberDialog(
-                "Мест",
-                EDIT_PLACE_DIALOG,
-                false,
-                (box?.countBox ?: 0).toString()
-            )
-        )
-    }
-
-    fun startEditCount() {
-        commandChannel.postValue(
-            EditNumberDialog(
-                "Количество",
-                EDIT_COUNT_DIALOG,
-                true,
-                (box?.count ?: 0).toString()
-            )
-        )
-    }
-
-    fun startAdd() {
-        commandChannel.postValue(
-            EditNumberDialog(
-                "Количество",
-                ADD_COUNT_DIALOG,
-                true,
-                "0"
-            )
-        )
-    }
-
-    fun startDelete() {
-        commandChannel.postValue(ConfirmDialog("Удаляем!", CONFIRM_DELETE_DIALOG))
-    }
-
     @SuppressLint("CheckResult")
     private fun deleteBox() {
-        useCaseBox.deleteBox(box)
-            .subscribe({
-                commandChannel.postValue(Close)
-            }, {
-                messageErrorChannel.postValue(it.message)
-            })
-    }
+        if (!checkDocEdit()) {
+            messageErrorChannel.value = "Нельзя изменять документ!"
+            return
+        }
 
+        repository.delete(loadHandler.getCurrentBox())
+        commandChannel.postValue(Close)
+    }
 
     @SuppressLint("CheckResult")
     private fun saveBoxByCount(count: Float) {
-        useCaseBox.saveBoxByCountFlowable(count, pallet!!.guid)
-            .subscribe({
-                setGuid(it.guid)
-            }, {
-                messageErrorChannel.postValue(it.message)
-            })
+        if (!checkDocEdit()) {
+            messageErrorChannel.value = "Нельзя изменять документ!"
+            return
+        }
+
+        val product = loadHandler.getCurrentProduct()
+
+        val pallet = loadHandler.getCurrentPallet()
+
+        val box = BoxCreatePallet(
+            guid = UUID.randomUUID().toString(),
+            guidPallet = pallet!!.guid,
+            barcode = "",
+            countBox = 1,
+            count = count,
+            dateChanged = Date()
+        )
+
+        addHandler.saveBox(box)
     }
 
     @SuppressLint("CheckResult")
     fun readBarcode(barcode: String) {
-        useCaseBox.saveBoxByBarcodeFlowable(barcode, pallet!!.guid)
-            .subscribe({
-                setGuid(it.guid)
-            }, {
-                messageErrorChannel.postValue(it.message)
-            })
+        if (!checkDocEdit()) {
+            messageErrorChannel.value = "Нельзя изменять документ!"
+            return
+        }
+
+        val product = loadHandler.getCurrentProduct()
+
+
+        val weight = getWeightByBarcode(
+            barcode = barcode,
+            start = product?.weightStartProduct ?: 0,
+            finish = product?.weightEndProduct ?: 0,
+            coff = product?.weightCoffProduct ?: 0f
+        )
+
+        if (weight == 0f) {
+            throw Throwable("Ошибка считывания веса!")
+        }
+
+        val pallet = loadHandler.getCurrentPallet()
+
+        val box = BoxCreatePallet(
+            guid = UUID.randomUUID().toString(),
+            guidPallet = pallet!!.guid,
+            barcode = barcode,
+            countBox = 1,
+            count = weight,
+            dateChanged = Date()
+        )
+
+        saveBox(box)
+    }
+
+    fun checkDocEdit():Boolean{
+        val status = loadHandler.getCurrentDoc()?.status
+        return checkDocumentUseCase.checkEditDocByStatus(status)
     }
 
     @SuppressLint("CheckResult")
-    private fun saveBox() {
-        useCaseBox.saveBoxFlowable(box!!)
-            .subscribe({
-                setGuid(it.guid)
-            }, {
-                messageErrorChannel.postValue(it.message)
-            })
+    private fun saveBox(box:BoxCreatePallet) {
+        addHandler.saveBox(box)
     }
 }
-

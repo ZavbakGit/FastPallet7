@@ -1,12 +1,12 @@
 package `fun`.gladkikh.fastpallet7.ui.createpallet.box
 
+import `fun`.gladkikh.fastpallet7.Constants
 import `fun`.gladkikh.fastpallet7.R
 import `fun`.gladkikh.fastpallet7.common.toSimpleDateTime
 import `fun`.gladkikh.fastpallet7.common.toSimpleFormat
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.BoxCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.PalletCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.ProductCreatePallet
-import `fun`.gladkikh.fastpallet7.ui.activity.MainActivity
 import `fun`.gladkikh.fastpallet7.ui.base.BaseFragment
 import `fun`.gladkikh.fastpallet7.ui.common.Command
 import `fun`.gladkikh.fastpallet7.ui.common.Command.Close
@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.block_box.*
 import kotlinx.android.synthetic.main.block_pallet.*
 import kotlinx.android.synthetic.main.block_product.*
-
+import kotlinx.android.synthetic.main.create_pallet_fragment_box.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BoxCreatePalletFragment : BaseFragment() {
@@ -22,13 +22,9 @@ class BoxCreatePalletFragment : BaseFragment() {
     override val layoutRes = R.layout.create_pallet_fragment_box
     override val viewModel: BoxCreatePalletViewModel by viewModel()
 
-    companion object {
-        val EXTRA_GUID = this::class.java.name + "extra.GUID"
-    }
-
     override fun initSubscription() {
         super.initSubscription()
-        val guid = ((viewModel.box?.guid) ?: (arguments?.get(EXTRA_GUID))) as String
+        val guid = ((viewModel.getGuid()) ?: (arguments?.get(Constants.EXTRA_GUID))) as String
 
         viewModel.setGuid(guid)
 
@@ -42,6 +38,14 @@ class BoxCreatePalletFragment : BaseFragment() {
 
         viewModel.getBoxLiveData().observe(viewLifecycleOwner, Observer {
             renderBox(it)
+        })
+
+        mainActivity.barcodeLiveData.observe(viewLifecycleOwner, Observer {
+            viewModel.readBarcode(it)
+        })
+
+        viewModel.getBufferLiveData().observe(viewLifecycleOwner, Observer {
+            tvBuffer.text = it.toString()
         })
 
         tvCountBox.setOnClickListener {
@@ -58,7 +62,7 @@ class BoxCreatePalletFragment : BaseFragment() {
         super.commandListener(command)
         when (command) {
             is Close -> {
-                mainActivity.navController.popBackStack()
+                navigateHandler.popBackStack()
             }
 
         }
@@ -69,7 +73,6 @@ class BoxCreatePalletFragment : BaseFragment() {
         tvCountProduct.text = product?.count.toSimpleFormat()
         tvCountPlaceProduct.text = product?.countBox.toSimpleFormat()
         tvCountPalletProduct.text = product?.countPallet.toSimpleFormat()
-        tvCountRowProduct.text = product?.countRow.toSimpleFormat()
 
         tvCountBackProduct.text = product?.countBack.toSimpleFormat()
         tvCountPlaceBackProduct.text = product?.countBoxBack.toSimpleFormat()
@@ -88,8 +91,8 @@ class BoxCreatePalletFragment : BaseFragment() {
         tvCountBox.text = box?.count.toSimpleFormat()
         tvCountPlaceBox.text = box?.countBox.toSimpleFormat()
 
-        tvCountBox.startAnimation((activity as MainActivity).fadeInAnim)
-        tvCountPlaceBox.startAnimation((activity as MainActivity).fadeInAnim)
+        //tvCountBox.startAnimation((activity as MainActivity).fadeInAnim)
+        //tvCountPlaceBox.startAnimation((activity as MainActivity).fadeInAnim)
 
     }
 }

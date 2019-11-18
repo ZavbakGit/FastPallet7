@@ -31,9 +31,9 @@ open class BaseViewModel : ViewModel() {
 
     }
 
-    val disposables = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
     override fun onCleared() {
         super.onCleared()
-        disposables.dispose()
+        compositeDisposable.dispose()
     }
 }

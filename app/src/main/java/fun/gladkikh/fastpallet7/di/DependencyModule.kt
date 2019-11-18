@@ -11,9 +11,11 @@ import `fun`.gladkikh.fastpallet7.model.usecase.creatpallet.PalletCreatePalletUs
 import `fun`.gladkikh.fastpallet7.model.usecase.recalcdb.RecalcDbUseCase
 import `fun`.gladkikh.fastpallet7.model.usecase.testdata.AddTestDataUseCase
 import `fun`.gladkikh.fastpallet7.repository.CreatePalletRepositoryUpdate
+import `fun`.gladkikh.fastpallet7.repository.SettingsRepository
 import `fun`.gladkikh.fastpallet7.repository.createpallet.BoxCreatePalletScreenRepository
 import `fun`.gladkikh.fastpallet7.repository.createpallet.PalletCreatePalletScreenRepository
 import `fun`.gladkikh.fastpallet7.ui.createpallet.box.BoxCreatePalletViewModel
+import `fun`.gladkikh.fastpallet7.ui.createpallet.pallet.PalletCreatePalletViewModel
 import `fun`.gladkikh.fastpallet7.ui.test.TestViewModel
 import android.content.Context
 import androidx.room.Room
@@ -35,6 +37,7 @@ object DependencyModule {
         single { getPalletCreatePalletScreenDao(get()) }
         //****************************************************************************************
         //REPOSITORY
+        single { SettingsRepository(get()) }
         single { CreatePalletRepositoryUpdate(get()) }
         single { BoxCreatePalletScreenRepository(get()) }
         single { PalletCreatePalletScreenRepository(get()) }
@@ -48,12 +51,21 @@ object DependencyModule {
 
 
 
+
         viewModel {
             BoxCreatePalletViewModel(
                 get(),
                 get()
             )
         }
+
+        viewModel {
+            PalletCreatePalletViewModel(
+                get(),
+                get()
+            )
+        }
+
         viewModel { TestViewModel(get(), get(), get()) }
 
     }

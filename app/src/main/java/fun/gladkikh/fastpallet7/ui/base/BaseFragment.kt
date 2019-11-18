@@ -6,6 +6,7 @@ import `fun`.gladkikh.fastpallet7.ui.common.Command.ConfirmDialog
 import `fun`.gladkikh.fastpallet7.ui.common.Command.EditNumberDialog
 import `fun`.gladkikh.fastpallet7.ui.common.startConfirmDialog
 import `fun`.gladkikh.fastpallet7.ui.common.startEditDialogNumber
+import `fun`.gladkikh.fastpallet7.ui.navigate.NavigateHandler
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +19,7 @@ abstract class BaseFragment : Fragment() {
     protected abstract val layoutRes: Int
 
     protected lateinit var mainActivity: MainActivity
-    private lateinit var navController: NavController
+    protected lateinit var navigateHandler: NavigateHandler
     protected abstract val viewModel: BaseViewModel
 
     override fun onCreateView(
@@ -31,7 +32,7 @@ abstract class BaseFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mainActivity = activity as MainActivity
-        navController = mainActivity.navController
+        navigateHandler = mainActivity.navigateHandler
     }
 
     override fun onResume() {

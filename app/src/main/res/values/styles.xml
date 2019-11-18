@@ -10,10 +10,12 @@
 
     <style name="TitleText" />
 
-    <style name="SectionTitleText" />
+    <style name="SectionTitleText"/>
+
 
     <style name="SectionDataText">
         <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorTextAccent</item>
     </style>
 
     <style name="DataText">
@@ -21,10 +23,11 @@
     </style>
 
     <style name="DataTextMedium">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="DataTextAccent" parent="DataText">
+
+    <style name="DataTextLargAccent" parent="DataText">
         <item name="android:textColor">@color/colorTextAccent</item>
     </style>
 

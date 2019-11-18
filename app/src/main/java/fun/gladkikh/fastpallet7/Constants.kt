@@ -16,6 +16,8 @@ object Constants {
     }
     val OS_VERSION by lazy { android.os.Build.VERSION.SDK_INT.toString() }
 
+    val EXTRA_GUID = "extra.GUID"
+
     val KEY_5 = 12 // 5
     val KEY_9 = 16 // 9
     val KEY_4 = 11 // 4

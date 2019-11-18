@@ -9,10 +9,21 @@
         android:label="TestFragment" >
         <action
             android:id="@+id/action_testFragment_to_boxCreatPalletFragment"
-            app:destination="@id/boxCreatPalletFragment" />
+            app:destination="@id/boxCreatePalletFragment" />
+        <action
+            android:id="@+id/action_testFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/boxCreatPalletFragment"
+        android:id="@+id/boxCreatePalletFragment"
         android:name="fun.gladkikh.fastpallet7.ui.createpallet.box.BoxCreatePalletFragment"
         android:label="BoxCreatPalletFragment" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="fun.gladkikh.fastpallet7.ui.SettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/palletCreatePalletFragment"
+        android:name="fun.gladkikh.fastpallet7.ui.createpallet.pallet.PalletCreatePalletFragment"
+        android:label="PalletCreatePalletFragment" />
 </navigation>

@@ -23,6 +23,12 @@ class CreatePalletRepositoryUpdate(val createPalletUpdateDao: CreatePalletUpdate
         }
     }
 
+    fun getgetListBoxByGuidPallet(guidPallet: String): List<BoxCreatePallet> {
+        return createPalletUpdateDao.getListBoxByGuidPallet(guidPallet).map {
+            it.toObject()
+        }
+    }
+
     inline fun <reified T> getObjectCreatePalletByGuid(guid: String): Any? {
         return when (T::class.java) {
             BoxCreatePallet::class.java -> createPalletUpdateDao.getBoxByGuid(guid)?.toObject()
@@ -67,7 +73,7 @@ class CreatePalletRepositoryUpdate(val createPalletUpdateDao: CreatePalletUpdate
 
     fun saveListBox(list: List<BoxCreatePallet>) {
         list.forEach {
-            createPalletUpdateDao.insertIgnore(it.toDb())
+            createPalletUpdateDao.insertOrUpdate(it.toDb())
         }
         //createPalletUpdateDao.insertListBox(list.map { it.toDb() })
     }

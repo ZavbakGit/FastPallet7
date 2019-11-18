@@ -35,8 +35,8 @@
         style="@style/TitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:text="Факт"
         app:layout_constraintBottom_toBottomOf="@+id/tvCountProduct"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,8 +47,8 @@
         style="@style/TitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:text="Док"
         app:layout_constraintBottom_toBottomOf="@+id/tvCountBackProduct"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,15 +70,6 @@
         android:text="Паллет"
         app:layout_constraintEnd_toEndOf="@+id/tvCountPalletProduct"
         app:layout_constraintStart_toStartOf="@+id/tvCountPalletProduct"
-        app:layout_constraintTop_toTopOf="@+id/textView12" />
-
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Записей"
-        app:layout_constraintEnd_toEndOf="@+id/tvCountRowProduct"
-        app:layout_constraintStart_toStartOf="@+id/tvCountRowProduct"
         app:layout_constraintTop_toTopOf="@+id/textView12" />
 
     <TextView
@@ -104,20 +95,6 @@
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toBottomOf="@+id/tvCountProduct"
         tools:text="352,568" />
-
-    <TextView
-        android:id="@+id/tvCountRowProduct"
-        style="@style/DataTextMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvCountPalletProduct"
-        app:layout_constraintTop_toBottomOf="@+id/textView14"
-        tools:text="5 0000" />
 
     <TextView
         android:id="@+id/tvCountPlaceProduct"
@@ -149,8 +126,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/tvCountRowProduct"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tvCountPlaceProduct"
         app:layout_constraintTop_toBottomOf="@+id/textView15"
         tools:text="1 000" />
