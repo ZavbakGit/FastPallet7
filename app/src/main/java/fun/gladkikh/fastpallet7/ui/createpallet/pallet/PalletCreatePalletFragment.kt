@@ -7,11 +7,11 @@ import `fun`.gladkikh.fastpallet7.common.toSimpleFormat
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.BoxCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.PalletCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.ProductCreatePallet
-import `fun`.gladkikh.fastpallet7.ui.activity.MainActivity
 import `fun`.gladkikh.fastpallet7.ui.base.BaseFragment
 import `fun`.gladkikh.fastpallet7.ui.base.MyBaseAdapter
 import `fun`.gladkikh.fastpallet7.ui.common.Command
-import `fun`.gladkikh.fastpallet7.ui.common.Command.Close
+import `fun`.gladkikh.fastpallet7.ui.common.Command.*
+
 import android.content.Context
 import android.view.View
 import android.widget.TextView
@@ -54,20 +54,18 @@ class PalletCreatePalletFragment : BaseFragment() {
             renderListBox(it)
         })
 
+        tvCountPallet.setOnClickListener {
+            viewModel.readBarcode("${(10..99).random()}123456789")
+        }
+
         mainActivity.barcodeLiveData.observe(viewLifecycleOwner, Observer {
-            //viewModel.readBarcode(it)
+            viewModel.readBarcode(it)
         })
 
         listView.setOnItemClickListener { _, _, i, _ ->
-            adapter.list[i].countBox?.let {
-                (activity as MainActivity).navigateHandler.startCreatePalletBox(
-                    adapter.list[i].guid?.let {
-                        openBox(it)
-                    }
-                )
-            }
+            val guid = adapter.list[i].guid
+            openBox(guid)
         }
-
 
     }
 
@@ -86,15 +84,32 @@ class PalletCreatePalletFragment : BaseFragment() {
                     frameLayoutProduct.visibility = View.GONE
                 }
             }
+
+            Constants.KEY_4 -> {
+                navigateHandler.startCreatePalletProductDialog(viewModel.getCurrentProduct()!!.guid)
+            }
+            Constants.KEY_3 -> {
+                viewModel.startAdd()
+            }
+            Constants.KEY_9 -> {
+                listView.selectedItemPosition.takeUnless { position ->
+                    position == -1
+                }?.run {
+                    viewModel.startDell(this)
+                }
+            }
         }
     }
+
     override fun commandListener(command: Command) {
         super.commandListener(command)
         when (command) {
             is Close -> {
                 navigateHandler.popBackStack()
             }
-
+            is OpenForm -> {
+                openBox(command.data as String)
+            }
         }
     }
 
@@ -115,12 +130,17 @@ class PalletCreatePalletFragment : BaseFragment() {
         tvCountRowPallet.text = pallet?.countRow.toSimpleFormat()
     }
 
+    private fun openBox(guidBox: String) {
+        navigateHandler.startCreatePalletBox(guidBox)
+    }
+
     private class Adapter(mContext: Context) : MyBaseAdapter<BoxCreatePallet>(mContext) {
         override fun bindView(item: BoxCreatePallet, holder: Any) {
             holder as ViewHolder
             holder.tvDateBox.text = item.dateChanged.toSimpleDateTime()
             holder.tvCountBox.text = item.count.toSimpleFormat()
             holder.tvCountPlaceBox.text = item.countBox.toSimpleFormat()
+            holder.tvNumberBox.text = item.number.toSimpleFormat()
 
         }
 
@@ -135,6 +155,7 @@ class PalletCreatePalletFragment : BaseFragment() {
         var tvDateBox: TextView = view.findViewById(R.id.tvDateBox)
         var tvCountBox: TextView = view.findViewById(R.id.tvCountBox)
         var tvCountPlaceBox: TextView = view.findViewById(R.id.tvCountPlaceBox)
+        var tvNumberBox: TextView = view.findViewById(R.id.tvNumberBox)
     }
 
 

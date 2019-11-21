@@ -17,7 +17,7 @@ class AddTestDataUseCase(private val createPalletRepositoryUpdate: CreatePalletR
         var countBox = 0
 
         val listDocuments =
-            (0..3).map {
+            (0..5).map {
                 CreatePallet(
                     guid = it.toString(),
                     status = Status.LOADED,
@@ -56,7 +56,7 @@ class AddTestDataUseCase(private val createPalletRepositoryUpdate: CreatePalletR
     }
 
     private fun getListProduct(guidDoc: String): List<ProductCreatePallet> {
-        return (0..3).map {
+        return (0..9).map {
             ProductCreatePallet(
                 guid = guidDoc + "_" + it,
                 guidDoc = guidDoc,
@@ -84,7 +84,7 @@ class AddTestDataUseCase(private val createPalletRepositoryUpdate: CreatePalletR
     }
 
     private fun getListPallets(guidProduct: String): List<PalletCreatePallet> {
-        return (0..2).map {
+        return (0..9).map {
             PalletCreatePallet(
                 guid = guidProduct + "_" + it,
                 guidProduct = guidProduct,
@@ -102,7 +102,7 @@ class AddTestDataUseCase(private val createPalletRepositoryUpdate: CreatePalletR
     }
 
     private fun getListBox(guidPallet: String): List<BoxCreatePallet> {
-        return (0..3).map {
+        return (0..99).map {
             BoxCreatePallet(
                 guid = guidPallet + "_" + it,
                 guidPallet = guidPallet,

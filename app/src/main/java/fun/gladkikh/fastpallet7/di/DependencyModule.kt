@@ -4,7 +4,6 @@ import `fun`.gladkikh.fastpallet7.db.AppDatabase
 import `fun`.gladkikh.fastpallet7.db.dao.BoxCreatePalletScreenDao
 import `fun`.gladkikh.fastpallet7.db.dao.CreatePalletUpdateDao
 import `fun`.gladkikh.fastpallet7.db.dao.PalletCreatePalletScreenDao
-import `fun`.gladkikh.fastpallet7.db.intity.createpallet.getListTriggerCreatePallet
 import `fun`.gladkikh.fastpallet7.model.usecase.check.CheckDocumentUseCase
 import `fun`.gladkikh.fastpallet7.model.usecase.creatpallet.BoxCreatePalletUseCase
 import `fun`.gladkikh.fastpallet7.model.usecase.creatpallet.PalletCreatePalletUseCase
@@ -16,6 +15,8 @@ import `fun`.gladkikh.fastpallet7.repository.createpallet.BoxCreatePalletScreenR
 import `fun`.gladkikh.fastpallet7.repository.createpallet.PalletCreatePalletScreenRepository
 import `fun`.gladkikh.fastpallet7.ui.createpallet.box.BoxCreatePalletViewModel
 import `fun`.gladkikh.fastpallet7.ui.createpallet.pallet.PalletCreatePalletViewModel
+import `fun`.gladkikh.fastpallet7.ui.createpallet.productdialog.ProductDialogCreatePalletViewModel
+
 import `fun`.gladkikh.fastpallet7.ui.test.TestViewModel
 import android.content.Context
 import androidx.room.Room
@@ -66,6 +67,13 @@ object DependencyModule {
             )
         }
 
+        viewModel {
+            ProductDialogCreatePalletViewModel(
+                get(),
+                get()
+            )
+        }
+
         viewModel { TestViewModel(get(), get(), get()) }
 
     }
@@ -77,9 +85,9 @@ object DependencyModule {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
 
-                        getListTriggerCreatePallet().forEach {
-                            db.execSQL(it)
-                        }
+//                        getListTriggerCreatePallet().forEach {
+//                            db.execSQL(it)
+//                        }
 
 
                     }

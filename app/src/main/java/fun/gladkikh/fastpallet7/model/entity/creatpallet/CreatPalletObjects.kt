@@ -71,5 +71,9 @@ data class BoxCreatePallet(
     var count: Float?, //Количество
     var countBox: Int?, //Количество мест
 
-    var dateChanged: Date?
+    var dateChanged: Date?,
+    /**
+     * Порядковый номер заполнится в списке
+     */
+    var number: Int? = null
 )

@@ -7,6 +7,7 @@ import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.CreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.PalletCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.ProductCreatePallet
 import `fun`.gladkikh.fastpallet7.model.usecase.check.CheckDocumentUseCase
+import `fun`.gladkikh.fastpallet7.model.usecase.creatpallet.BoxActionUseCase
 import `fun`.gladkikh.fastpallet7.repository.CreatePalletRepositoryUpdate
 import `fun`.gladkikh.fastpallet7.ui.base.BaseViewModel
 import `fun`.gladkikh.fastpallet7.ui.common.Command
@@ -28,7 +29,7 @@ class BoxCreatePalletViewModel(
 
     private val bufferMutableLiveData = MutableLiveData<Int>()
 
-    private val addHandler = AddHandler(
+    private val boxUseCase = BoxActionUseCase(
         compositeDisposable = compositeDisposable,
         repository = repository,
         //Берем данные из нового бокса
@@ -40,6 +41,10 @@ class BoxCreatePalletViewModel(
         afterSaveFun = { box, buffer ->
             bufferMutableLiveData.postValue(buffer)
             setGuid(box.guid)
+        },
+        //После удаления закрываем
+        afterDellFun = {
+            commandChannel.postValue(Close)
         })
 
     fun getDocLiveData(): LiveData<CreatePallet> = loadHandler.getDocLiveData()
@@ -168,9 +173,7 @@ class BoxCreatePalletViewModel(
             messageErrorChannel.value = "Нельзя изменять документ!"
             return
         }
-
-        repository.delete(loadHandler.getCurrentBox())
-        commandChannel.postValue(Close)
+        boxUseCase.delete(loadHandler.getCurrentBox()!!)
     }
 
     @SuppressLint("CheckResult")
@@ -193,7 +196,7 @@ class BoxCreatePalletViewModel(
             dateChanged = Date()
         )
 
-        addHandler.saveBox(box)
+        boxUseCase.saveBoxByByffer(box)
     }
 
     @SuppressLint("CheckResult")
@@ -235,9 +238,8 @@ class BoxCreatePalletViewModel(
         val status = loadHandler.getCurrentDoc()?.status
         return checkDocumentUseCase.checkEditDocByStatus(status)
     }
-
     @SuppressLint("CheckResult")
     private fun saveBox(box:BoxCreatePallet) {
-        addHandler.saveBox(box)
+        boxUseCase.saveBoxByByffer(box)
     }
 }

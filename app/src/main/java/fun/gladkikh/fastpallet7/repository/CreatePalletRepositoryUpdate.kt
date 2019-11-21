@@ -63,8 +63,8 @@ class CreatePalletRepositoryUpdate(val createPalletUpdateDao: CreatePalletUpdate
 
     fun <T> delete(intety: T) {
         when (intety) {
-            is BoxCreatePallet -> createPalletUpdateDao.delete(intety.toDb())
-            is PalletCreatePallet -> createPalletUpdateDao.delete(intety.toDb())
+            is BoxCreatePallet -> createPalletUpdateDao.deleteTrigger(intety.toDb())
+            is PalletCreatePallet -> createPalletUpdateDao.deleteTrigger(intety.toDb())
             is ProductCreatePallet -> createPalletUpdateDao.delete(intety.toDb())
             is CreatePallet -> createPalletUpdateDao.delete(intety.toDb())
             else -> throw Throwable("Этот объект нельзя удалять! ${intety.toString()}")

@@ -2,7 +2,7 @@ package `fun`.gladkikh.fastpallet7.ui.common
 
 sealed class Command {
     object Close : Command()
-    data class OpenForm(val data: Any? = null) : Command()
+    data class OpenForm(val formCode:Int? = null,val data: Any? = null) : Command()
     data class ConfirmDialog(
         val message: String,
         val requestCode: Int,

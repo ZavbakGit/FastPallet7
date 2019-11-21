@@ -334,7 +334,7 @@ class TriggerTest {
         testProduct(productTest, listOf(palletTest))
 
         //delete
-        createPalletUpdateDao!!.delete(box0)
+        createPalletUpdateDao!!.deleteTrigger(box0)
         testPallet(palletTest, listBox.filter { it.guid != box0.guid })
         testProduct(productTest, listOf(palletTest))
 
@@ -376,7 +376,7 @@ class TriggerTest {
         createPalletUpdateDao!!.insertOrUpdate(palletTest1)
         testProduct(productTest, listOf(palletTest, palletTest1))
 
-        createPalletUpdateDao!!.delete(palletTest1)
+        createPalletUpdateDao!!.deleteTrigger(palletTest1)
         testProduct(productTest, listOf(palletTest))
 
         createPalletUpdateDao!!.delete(docTest)

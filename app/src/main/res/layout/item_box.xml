@@ -10,36 +10,57 @@
         style="@style/DataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        app:layout_constraintEnd_toStartOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="@+id/tvNumberBox"
+        tools:text="352,568" />
+
+    <TextView
+        android:id="@+id/tvNumberBox"
+        style="@style/DataText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/tvCountPlaceBox"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="352,568" />
+        tools:text="1" />
 
     <TextView
         android:id="@+id/tvCountPlaceBox"
         style="@style/DataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="64dp"
+        android:layout_marginRight="64dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvCountBox"
-        app:layout_constraintTop_toTopOf="@+id/tvCountBox"
+        app:layout_constraintTop_toTopOf="@+id/tvNumberBox"
         tools:text="10" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="М"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvCountPlaceBox"
+        app:layout_constraintEnd_toStartOf="@+id/tvCountPlaceBox" />
 
     <TextView
         android:id="@+id/tvDateBox"
         style="@style/SectionDataText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCountPlaceBox"
+        app:layout_constraintTop_toBottomOf="@+id/tvNumberBox"
         tools:text="10.11.2019 12:12:33" />
 
     <TextView
@@ -51,16 +72,6 @@
         android:text="К"
         app:layout_constraintBaseline_toBaselineOf="@+id/tvCountBox"
         app:layout_constraintEnd_toStartOf="@+id/tvCountBox" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="М"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tvCountPlaceBox"
-        app:layout_constraintEnd_toStartOf="@+id/tvCountPlaceBox" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

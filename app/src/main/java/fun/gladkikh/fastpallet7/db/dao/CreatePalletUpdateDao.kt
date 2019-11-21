@@ -6,6 +6,7 @@ import `fun`.gladkikh.fastpallet7.db.intity.createpallet.CreatePalletDb
 import `fun`.gladkikh.fastpallet7.db.intity.createpallet.PalletCreatePalletDb
 import `fun`.gladkikh.fastpallet7.db.intity.createpallet.ProductCreatePalletDb
 import androidx.room.*
+import java.math.BigDecimal
 
 @Dao
 interface CreatePalletUpdateDao {
@@ -23,18 +24,67 @@ interface CreatePalletUpdateDao {
 
     @Transaction
     fun insertOrUpdate(entity: BoxCreatePalletDb) {
+        var countBox: Int = entity.countBox ?: 0
+        var count: BigDecimal = (entity.count ?: 0f).toBigDecimal()
+        var row = 1
+
         if (insertIgnore(entity) == -1L) {
+            val box = getBoxByGuid(entity.guid)
             update(entity)
+            countBox -= (box.countBox ?: 0)
+            count -= (box.count ?: 0f).toBigDecimal()
+            row -= 1
         }
+
+        val pallet = getPalletByGuid(entity.guidPallet)
+        pallet.count = ((pallet.count ?: 0f).toBigDecimal() + count).toFloat()
+        pallet.countBox = (pallet.countBox ?: 0) + countBox
+        pallet.countRow = (pallet.countRow ?: 0) + row
+
+        insertOrUpdate(pallet)
+
+
+        val product = getProductByGuid(pallet.guidProduct)
+        product.count = ((product.count ?: 0f).toBigDecimal() + count).toFloat()
+        product.countBox = (product.countBox ?: 0) + countBox
+        product.countRow = (product.countRow ?: 0) + row
+
+        insertOrUpdate(product)
     }
+
+    @Transaction
+    fun deleteTrigger(entity: BoxCreatePalletDb) {
+        var countBox: Int = entity.countBox ?: 0
+        var count: BigDecimal = (entity.count ?: 0f).toBigDecimal()
+
+        delete(entity)
+
+
+        val pallet = getPalletByGuid(entity.guidPallet)
+        pallet.count = ((pallet.count ?: 0f).toBigDecimal() - count).toFloat()
+        pallet.countBox = (pallet.countBox ?: 0) - countBox
+        pallet.countRow = (pallet.countRow ?: 0) - 1
+
+        insertOrUpdate(pallet)
+
+        val product = getProductByGuid(pallet.guidProduct)
+        product.count = ((product.count ?: 0f).toBigDecimal() - count).toFloat()
+        product.countBox = (product.countBox ?: 0) - countBox
+        product.countRow = (product.countRow ?: 0) - 1
+        insertOrUpdate(product)
+
+    }
+
 
     @Delete
     fun delete(entity: BoxCreatePalletDb)
 
+
     @Query("SELECT * FROM BoxCreatePalletDb WHERE guid = :guid")
     fun getBoxByGuid(guid: String): BoxCreatePalletDb
 
-    @Query("SELECT * FROM BoxCreatePalletDb WHERE guidPallet = :guidPallet")
+    @Query("SELECT * FROM BoxCreatePalletDb WHERE guidPallet = :guidPallet " +
+            "  ORDER BY dateChanged DESC")
     fun getListBoxByGuidPallet(guidPallet: String): List<BoxCreatePalletDb>
 
     //endregion
@@ -51,6 +101,10 @@ interface CreatePalletUpdateDao {
     fun insertOrUpdate(entity: PalletCreatePalletDb) {
         if (insertIgnore(entity) == -1L) {
             update(entity)
+        }else{
+            val product = getProductByGuid(entity.guidProduct)
+            product.countPallet = (product.countPallet ?: 0) + 1
+            insertOrUpdate(product)
         }
     }
 
@@ -61,6 +115,23 @@ interface CreatePalletUpdateDao {
                 update(it)
             }
         }
+    }
+
+    @Transaction
+    fun deleteTrigger(entity: PalletCreatePalletDb) {
+        var countBox: Int = entity.countBox ?: 0
+        var count: BigDecimal = (entity.count ?: 0f).toBigDecimal()
+        var countRow: Int = entity.countRow ?: 0
+
+        delete(entity)
+
+        val product = getProductByGuid(entity.guidProduct)
+        product.count = ((product.count ?: 0f).toBigDecimal() - count).toFloat()
+        product.countBox = (product.countBox ?: 0) - countBox
+        product.countRow = (product.countRow ?: 0) - countRow
+        product.countPallet = (product.countPallet ?: 0) - 1
+
+        insertOrUpdate(product)
     }
 
     @Delete

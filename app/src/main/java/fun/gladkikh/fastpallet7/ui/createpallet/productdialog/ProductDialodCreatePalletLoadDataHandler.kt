@@ -1,8 +1,6 @@
-package `fun`.gladkikh.fastpallet7.ui.createpallet.pallet
+package `fun`.gladkikh.fastpallet7.ui.createpallet.productdialog
 
-import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.BoxCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.CreatePallet
-import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.PalletCreatePallet
 import `fun`.gladkikh.fastpallet7.model.entity.creatpallet.ProductCreatePallet
 import `fun`.gladkikh.fastpallet7.repository.CreatePalletRepositoryUpdate
 import androidx.lifecycle.LiveData
@@ -13,24 +11,19 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 
-class PalletCreatePalletLoadDataHandler(
+class ProductDialodCreatePalletLoadDataHandler(
     compositeDisposable: CompositeDisposable,
     private val repository: CreatePalletRepositoryUpdate
 ) {
     private val publishSubject = PublishSubject.create<String>()
 
-    private val listBox = MutableLiveData<List<BoxCreatePallet>>()
-    private val pallet = MutableLiveData<PalletCreatePallet>()
+
     private val product = MutableLiveData<ProductCreatePallet>()
     private val doc = MutableLiveData<CreatePallet>()
 
-    fun getListBoxLiveData(): LiveData<List<BoxCreatePallet>> = listBox
-    fun getPalletLiveData(): LiveData<PalletCreatePallet> = pallet
     fun getProductLiveData(): LiveData<ProductCreatePallet> = product
     fun getDocLiveData(): LiveData<CreatePallet> = doc
 
-    fun getCurrentListBox() = listBox.value
-    fun getCurrentPallet() = pallet.value
     fun getCurrentProduct() = product.value
     fun getCurrentDoc() = doc.value
 
@@ -42,24 +35,17 @@ class PalletCreatePalletLoadDataHandler(
     }
 
     private fun getLoadDataFlowable(): Flowable<*> {
-
-
         return publishSubject.toFlowable(BackpressureStrategy.BUFFER)
             .observeOn(Schedulers.io())
             .doOnNext {
                 val size = repository.getgetListBoxByGuidPallet(it).size
-
-                listBox.postValue(repository.getgetListBoxByGuidPallet(it).mapIndexed { index, boxCreatePallet ->
-                    boxCreatePallet.number = size - index
-                    return@mapIndexed boxCreatePallet
-                })
-                pallet.postValue(repository.getObjectCreatePalletByGuid<PalletCreatePallet>(it) as PalletCreatePallet)
-                product.postValue(repository.getObjectCreatePalletByGuid<ProductCreatePallet>("0_0") as ProductCreatePallet)
-                doc.postValue(repository.getObjectCreatePalletByGuid<CreatePallet>("0") as CreatePallet)
+                val pr = repository.getObjectCreatePalletByGuid<ProductCreatePallet>(it) as ProductCreatePallet
+                product.postValue(pr)
+                doc.postValue(repository.getObjectCreatePalletByGuid<CreatePallet>(pr.guidDoc) as CreatePallet)
             }
     }
 
-    fun setGuid(guid: String) {
-        publishSubject.onNext(guid)
+    fun setGuid(guidProduct: String) {
+        publishSubject.onNext(guidProduct)
     }
 }

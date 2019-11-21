@@ -35,6 +35,7 @@ abstract class BaseFragment : Fragment() {
         navigateHandler = mainActivity.navigateHandler
     }
 
+
     override fun onResume() {
         super.onResume()
         initSubscription()

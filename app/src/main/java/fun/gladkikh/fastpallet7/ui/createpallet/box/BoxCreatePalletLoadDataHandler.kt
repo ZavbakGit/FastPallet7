@@ -40,7 +40,11 @@ class BoxCreatePalletLoadDataHandler(
     init {
         compositeDisposable.add(
             getLoadDataFlowable()
-                .subscribe()
+                .subscribe({
+
+                },{
+                    val t = it
+                })
         )
     }
 
