@@ -41,10 +41,7 @@ class ProductDialogCreatePalletFragment : BaseFragment() {
 
     override fun keyDownListener(keyCode: Int) {
         super.keyDownListener(keyCode)
-        //viewModel.keyDown(keyCode)
-        when (keyCode) {
-
-        }
+        viewModel.keyDown(keyCode)
     }
 
     override fun commandListener(command: Command) {

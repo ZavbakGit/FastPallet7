@@ -7,6 +7,7 @@ import `fun`.gladkikh.fastpallet7.db.dao.PalletCreatePalletScreenDao
 import `fun`.gladkikh.fastpallet7.model.usecase.check.CheckDocumentUseCase
 import `fun`.gladkikh.fastpallet7.model.usecase.creatpallet.BoxCreatePalletUseCase
 import `fun`.gladkikh.fastpallet7.model.usecase.creatpallet.PalletCreatePalletUseCase
+import `fun`.gladkikh.fastpallet7.model.usecase.creatpallet.ProductActionUseCase
 import `fun`.gladkikh.fastpallet7.model.usecase.recalcdb.RecalcDbUseCase
 import `fun`.gladkikh.fastpallet7.model.usecase.testdata.AddTestDataUseCase
 import `fun`.gladkikh.fastpallet7.repository.CreatePalletRepositoryUpdate

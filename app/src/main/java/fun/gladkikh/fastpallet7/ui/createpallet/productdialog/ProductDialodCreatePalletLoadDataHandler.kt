@@ -45,6 +45,8 @@ class ProductDialodCreatePalletLoadDataHandler(
             }
     }
 
+
+
     fun setGuid(guidProduct: String) {
         publishSubject.onNext(guidProduct)
     }
